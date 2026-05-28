@@ -1,0 +1,14 @@
+C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\bin\Debug\net10.0\Smart Dividend Portfolio Tracker.exe
+C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\bin\Debug\net10.0\Smart Dividend Portfolio Tracker.deps.json
+C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\bin\Debug\net10.0\Smart Dividend Portfolio Tracker.runtimeconfig.json
+C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\bin\Debug\net10.0\Smart Dividend Portfolio Tracker.dll
+C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\bin\Debug\net10.0\Smart Dividend Portfolio Tracker.pdb
+C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\obj\Debug\net10.0\Smart Dividend Portfolio Tracker.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\obj\Debug\net10.0\Smart Dividend Portfolio Tracker.AssemblyInfoInputs.cache
+C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\obj\Debug\net10.0\Smart Dividend Portfolio Tracker.AssemblyInfo.cs
+C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\obj\Debug\net10.0\Smart Dividend Portfolio Tracker.csproj.CoreCompileInputs.cache
+C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\obj\Debug\net10.0\Smart Dividend Portfolio Tracker.dll
+C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\obj\Debug\net10.0\refint\Smart Dividend Portfolio Tracker.dll
+C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\obj\Debug\net10.0\Smart Dividend Portfolio Tracker.pdb
+C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\obj\Debug\net10.0\Smart Dividend Portfolio Tracker.genruntimeconfig.cache
+C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\obj\Debug\net10.0\ref\Smart Dividend Portfolio Tracker.dll
