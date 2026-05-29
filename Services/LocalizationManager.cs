@@ -48,7 +48,31 @@ namespace SmartDividendTracker.Services
             { "SetGoals", ("Change Investment Goals", "Змінити цілі інвестування") },
             { "SetHorizon", ("Change Investment Horizon", "Змінити горизонт інвестування") },
             { "Back", ("Back to Main Menu", "Назад до головного меню") },
-            { "ExitMessage", ("Saving progress... See you later, Investor!", "Зберігаємо прогрес... До зустрічі, Інвесторе!") }
+            { "ExitMessage", ("Saving progress... See you later, Investor!", "Зберігаємо прогрес... До зустрічі, Інвесторе!") },
+            { "PortfolioMenu", ("PORTFOLIO MANAGEMENT", "УПРАВЛІННЯ ПОРТФЕЛЕМ") },
+            { "AddStock", ("Add New Asset", "Додати новий актив") },
+            { "ViewAssets", ("View All Assets", "Переглянути всі активи") },
+            { "RemoveStock", ("Remove Asset", "Видалити актив") },
+            { "EnterTicker", ("Enter Ticker (e.g., AAPL, KO): ", "Введіть тикер (напр., AAPL, KO): ") },
+            { "SelectSector", ("Select Sector", "Оберіть сектор економіки") },
+            { "EnterPrice", ("Enter Average Price ($): ", "Введіть середню ціну ($): ") },
+            { "EnterShares", ("Enter Quantity of Shares: ", "Введіть кількість акцій: ") },
+            { "EnterYield", ("Enter Dividend Yield (%): ", "Введіть дивідендну дохідність (%): ") },
+            { "EnterPE", ("Enter P/E Ratio: ", "Введіть показник P/E: ") },
+            { "InvalidInput", ("Invalid input. Please enter a valid number.", "Некоректний ввід. Будь ласка, введіть число.") },
+            { "StockAdded", ("Asset successfully added to portfolio!", "Актив успішно додано до портфеля!") },
+            { "TblTicker", ("Ticker", "Тикер") },
+            { "TblSector", ("Sector", "Сектор") },
+            { "TblPrice", ("Price", "Ціна") },
+            { "TblShares", ("Qty", "К-ть") },
+            { "TblValue", ("Total Value", "Вартість") },
+            { "TblYield", ("Yield", "Дохідн.") },
+            { "TblAnnualDiv", ("Div/Yr", "Див/Рік") },
+            { "TotalIncome", ("Total Annual Dividend Income:", "Загальний річний дивідендний дохід:") },
+            { "EmptyPort", ("Your portfolio is empty. Add some assets first!", "Ваш портфель порожній. Додайте активи!") },
+            { "SelectToRemove", ("Select an asset to remove", "Оберіть актив для видалення") },
+            { "StockRemoved", ("Asset successfully removed!", "Актив успішно видалено!") },
+            { "Cancel", ("Cancel", "Скасувати") }
         };
 
         public static string Get(string key)

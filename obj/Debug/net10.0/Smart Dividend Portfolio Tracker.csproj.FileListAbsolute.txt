@@ -12,3 +12,4 @@ C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\obj\Debug\net10.0\re
 C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\obj\Debug\net10.0\Smart Dividend Portfolio Tracker.pdb
 C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\obj\Debug\net10.0\Smart Dividend Portfolio Tracker.genruntimeconfig.cache
 C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\obj\Debug\net10.0\ref\Smart Dividend Portfolio Tracker.dll
+C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\obj\Debug\net10.0\Smart Dividend Portfolio Tracker.sourcelink.json
