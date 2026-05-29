@@ -12,5 +12,7 @@ namespace SmartDividendTracker.Models
 
         public InvestmentHorizon Horizon { get; set; }
         public bool HasExistingPortfolio { get; set; }
+        // Додай це до існуючих властивостей (Language, Experience, тощо)
+        public bool HasCompletedTutorial { get; set; } = false;
     }
 }

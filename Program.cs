@@ -9,20 +9,26 @@ namespace SmartDividendTracker
     {
         static void Main(string[] args)
         {
-            // Налаштування кодування для української мови
+            // Set console encoding to UTF-8
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.InputEncoding = System.Text.Encoding.UTF8;
 
-            // Ініціалізація сервісів
             var onboarding = new OnboardingService();
             UserProfile currentUser = onboarding.RunOrLoadProfile();
 
-            // Встановлюємо мову
             LocalizationManager.SetLanguage(currentUser.Language);
+
+            // --- ЗАПУСК ІГРОВОГО ТУТОРІАЛУ ДЛЯ НОВАЧКІВ ---
+            if (currentUser.Experience == ExperienceLevel.Beginner && !currentUser.HasCompletedTutorial)
+            {
+                TutorialService.RunTutorial();
+
+                currentUser.HasCompletedTutorial = true;
+                onboarding.SaveProfile(currentUser);
+            }
 
             var portfolioManager = new PortfolioManager();
 
-            // Запускаємо головне меню
             ShowMainMenu(currentUser, portfolioManager, onboarding);
         }
 
@@ -32,7 +38,6 @@ namespace SmartDividendTracker
 
             while (true)
             {
-                // Формуємо список цілей для заголовка
                 var localizedGoalsList = new List<string>();
                 foreach (var goal in profile.Goals)
                 {
@@ -46,7 +51,6 @@ namespace SmartDividendTracker
                 }
                 string goalsText = string.Join(", ", localizedGoalsList);
 
-                // Формуємо горизонт
                 string localizedHorizon = profile.Horizon switch
                 {
                     InvestmentHorizon.UpTo5Years => LocalizationManager.Get("Horiz5"),
@@ -61,7 +65,8 @@ namespace SmartDividendTracker
                 var menuOptions = new List<string>
                 {
                     LocalizationManager.Get("MenuOpt1"), // View Portfolio
-                    LocalizationManager.Get("MenuOpt2"), // AI Analysis
+                    LocalizationManager.Get("MenuOpt2"), // Beginner's Cheat Sheet
+                    LocalizationManager.Get("MenuOpt5"), // Compound Calculator
                     LocalizationManager.Get("MenuOpt4"), // Profile Settings
                     LocalizationManager.Get("MenuOpt3")  // Exit
                 };
@@ -73,23 +78,22 @@ namespace SmartDividendTracker
 
                 if (selectedText == LocalizationManager.Get("MenuOpt1"))
                 {
-                    // Вхід у підменю портфеля
                     ShowPortfolioMenu(portfolioManager);
                 }
                 else if (selectedText == LocalizationManager.Get("MenuOpt2"))
                 {
-                    Console.WriteLine("\n[AI Market Analysis is under construction.]");
-                    Console.WriteLine("Press any key to return...");
-                    Console.ReadKey(true);
+                    CheatSheetService.Show();
+                }
+                else if (selectedText == LocalizationManager.Get("MenuOpt5"))
+                {
+                    CompoundCalculatorService.RunCalculator();
                 }
                 else if (selectedText == LocalizationManager.Get("MenuOpt4"))
                 {
-                    // Вхід у налаштування
                     onboarding.OpenSettings(profile);
                 }
                 else if (selectedText == LocalizationManager.Get("MenuOpt3"))
                 {
-                    // Вихід з анімацією
                     ConsoleHelper.ShowExitAnimation(LocalizationManager.Get("ExitMessage"));
                     break;
                 }
@@ -102,7 +106,6 @@ namespace SmartDividendTracker
 
             while (true)
             {
-                // Ця змінна totalValue рахується тут і використовується у всьому меню
                 decimal totalValue = portfolioManager.GetTotalPortfolioValue();
 
                 string header = $"{LocalizationManager.Get("PortfolioMenu")}\n" +
@@ -113,6 +116,7 @@ namespace SmartDividendTracker
                     LocalizationManager.Get("ViewAssets"),
                     LocalizationManager.Get("AddStock"),
                     LocalizationManager.Get("RemoveStock"),
+                    LocalizationManager.Get("ClearPortfolio"), // НОВА КНОПКА ОЧИЩЕННЯ
                     LocalizationManager.Get("Back")
                 };
 
@@ -121,7 +125,6 @@ namespace SmartDividendTracker
 
                 string selectedText = options[choice];
 
-                // --- 1. ПЕРЕГЛЯД АКТИВІВ (ТАБЛИЦЯ) ---
                 if (selectedText == LocalizationManager.Get("ViewAssets"))
                 {
                     Console.Clear();
@@ -143,7 +146,7 @@ namespace SmartDividendTracker
                     {
                         Console.BackgroundColor = ConsoleColor.DarkGray;
                         Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine($"| {LocalizationManager.Get("TblTicker"),-6} | {LocalizationManager.Get("TblSector"),-22} | {LocalizationManager.Get("TblPrice"),8} | {LocalizationManager.Get("TblShares"),5} | {LocalizationManager.Get("TblValue"),12} | {LocalizationManager.Get("TblYield"),7} | {LocalizationManager.Get("TblAnnualDiv"),10} |");
+                        Console.WriteLine($"| {"Ticker",-6} | {"Sector",-22} | {"Price",8} | {"Shs",5} | {"Value",12} | {"Yield",7} | {"AnnualDiv",10} |");
                         Console.ResetColor();
                         Console.WriteLine(new string('-', 89));
 
@@ -154,7 +157,6 @@ namespace SmartDividendTracker
                         }
                         Console.WriteLine(new string('-', 89));
 
-                        // Використовуємо вже існуючу змінну totalValue!
                         decimal totalIncome = portfolioManager.GetTotalAnnualIncome();
                         decimal avgYield = totalValue > 0 ? (totalIncome / totalValue) * 100m : 0m;
 
@@ -168,7 +170,6 @@ namespace SmartDividendTracker
                     Console.ReadKey(true);
                 }
 
-                // --- 2. ДОДАВАННЯ НОВОГО АКТИВУ ---
                 else if (selectedText == LocalizationManager.Get("AddStock"))
                 {
                     Console.Clear();
@@ -179,7 +180,6 @@ namespace SmartDividendTracker
                     Console.ResetColor();
 
                     Console.Write(LocalizationManager.Get("EnterTicker"));
-                    // Додали ?? "" щоб уникнути помилок CS8600
                     string ticker = Console.ReadLine()?.Trim().ToUpper() ?? "";
                     if (string.IsNullOrEmpty(ticker)) ticker = "UNKNOWN";
 
@@ -254,7 +254,6 @@ namespace SmartDividendTracker
                     Console.ReadKey(true);
                 }
 
-                // --- 3. ВИДАЛЕННЯ АКТИВУ ---
                 else if (selectedText == LocalizationManager.Get("RemoveStock"))
                 {
                     var stocks = portfolioManager.GetAllStocks();
@@ -270,25 +269,19 @@ namespace SmartDividendTracker
                     }
                     else
                     {
-                        // Формуємо красивий список наявних акцій для меню
                         var removeOptions = new List<string>();
                         foreach (var stock in stocks)
                         {
                             removeOptions.Add($"{stock.Ticker,-6} | {stock.Sector} | {stock.Shares} shares | ${stock.TotalValue:F2}");
                         }
 
-                        // Додаємо кнопку скасування в кінець списку
                         removeOptions.Add($"[ {LocalizationManager.Get("Cancel")} ]");
-                        
-                        // Викликаємо наше меню зі стрілочками
+
                         int removeChoice = ConsoleHelper.SelectOption(LocalizationManager.Get("SelectToRemove"), removeOptions);
 
-                        // Перевіряємо, чи користувач не натиснув "Скасувати" (це останній індекс)
                         if (removeChoice < stocks.Count)
                         {
                             string tickerToRemove = stocks[removeChoice].Ticker;
-
-                            // Викликаємо метод видалення з нашого PortfolioManager
                             portfolioManager.RemoveStock(tickerToRemove);
 
                             Console.Clear();
@@ -301,7 +294,36 @@ namespace SmartDividendTracker
                     }
                 }
 
-                // --- 4. НАЗАД ---
+                // --- НОВИЙ БЛОК ОЧИЩЕННЯ ПОРТФЕЛЯ ---
+                else if (selectedText == LocalizationManager.Get("ClearPortfolio"))
+                {
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("=======================================");
+                    Console.WriteLine($"  {LocalizationManager.Get("ClearPortfolio").ToUpper()}");
+                    Console.WriteLine("=======================================\n");
+                    Console.ResetColor();
+
+                    Console.Write(LocalizationManager.Get("ClearConfirm"));
+                    string confirmation = Console.ReadLine()?.Trim().ToUpper() ?? "";
+
+                    if (confirmation == "YES")
+                    {
+                        portfolioManager.ClearAll();
+
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine($"\n{LocalizationManager.Get("PortfolioCleared")}");
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        Console.WriteLine("\n[Action canceled]");
+                    }
+
+                    Console.WriteLine("\nPress any key to return...");
+                    Console.ReadKey(true);
+                }
+
                 else if (selectedText == LocalizationManager.Get("Back"))
                 {
                     break;

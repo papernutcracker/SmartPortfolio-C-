@@ -31,7 +31,7 @@ namespace SmartDividendTracker.Services
             { "ProfileSaved", ("Profile saved successfully! Let's start.", "Профіль успішно збережено! Починаємо.") },
             { "MainMenu", ("MAIN MENU", "ГОЛОВНЕ МЕНЮ") },
             { "MenuOpt1", ("View Portfolio", "Переглянути портфель") },
-            { "MenuOpt2", ("AI Market Analysis", "AI Аналіз ринку") },
+            { "MenuOpt2", ("Beginner's Cheat Sheet", "Шпаргалка новачка") },
             { "MenuOpt3", ("Exit", "Вихід") },
             { "GoalPrompt", ("Select your main investment goal", "Оберіть вашу головну мету інвестування") },
             { "GoalPassive", ("Passive Income", "Пасивний дохід (Дивіденди)") },
@@ -42,11 +42,18 @@ namespace SmartDividendTracker.Services
                 "Увага: Мету 'Пасивний дохід' вилучено, оскільки це ризиковано для горизонту до 5 років."
             ) },
             { "MenuOpt4", ("Profile Settings", "Налаштування профілю") },
+            
+            // --- ОСЬ ЦІ КЛЮЧІ БУЛИ ПРОПУЩЕНІ ДЛЯ НАЛАШТУВАНЬ ---
+            { "SettingsTitle", ("SETTINGS", "НАЛАШТУВАННЯ") },
+            { "ChangeLang", ("Change Language", "Змінити мову") },
+            { "ChangeExp", ("Change Experience Level", "Змінити рівень досвіду") },
+            { "ChangeHorizon", ("Change Investment Horizon", "Змінити горизонт інвестування") },
+            { "ResetTutorial", ("Reset Tutorial", "Скинути навчання (Туторіал)") },
+            { "TutResetSuccess", ("Tutorial status has been reset! It will launch on next restart.", "Статус навчання скинуто! Воно запуститься при наступному старті.") },
+            // ---------------------------------------------------
+
             { "SettingsMenu", ("PROFILE SETTINGS", "НАЛАШТУВАННЯ ПРОФІЛЮ") },
-            { "SetLang", ("Change Language", "Змінити мову") },
-            { "SetExp", ("Change Experience Level", "Змінити рівень досвіду") },
             { "SetGoals", ("Change Investment Goals", "Змінити цілі інвестування") },
-            { "SetHorizon", ("Change Investment Horizon", "Змінити горизонт інвестування") },
             { "Back", ("Back to Main Menu", "Назад до головного меню") },
             { "ExitMessage", ("Saving progress... See you later, Investor!", "Зберігаємо прогрес... До зустрічі, Інвесторе!") },
             { "PortfolioMenu", ("PORTFOLIO MANAGEMENT", "УПРАВЛІННЯ ПОРТФЕЛЕМ") },
@@ -72,7 +79,31 @@ namespace SmartDividendTracker.Services
             { "EmptyPort", ("Your portfolio is empty. Add some assets first!", "Ваш портфель порожній. Додайте активи!") },
             { "SelectToRemove", ("Select an asset to remove", "Оберіть актив для видалення") },
             { "StockRemoved", ("Asset successfully removed!", "Актив успішно видалено!") },
-            { "Cancel", ("Cancel", "Скасувати") }
+            { "Cancel", ("Cancel", "Скасувати") },
+            { "CalcMenuTitle", ("COMPOUND INTEREST MAGIC", "МАГІЯ СКЛАДНОГО ВІДСОТКА") },
+            { "EnterMonthly", ("Enter your monthly contribution ($): ", "Скільки ви можете відкладати щомісяця? ($): ") },
+            { "EnterRate", ("Enter expected annual return (%, default 8%): ", "Очікувана річна дохідність (%, зазвичай 8-10%): ") },
+            { "Year", ("Year", "Рік") },
+            { "Invested", ("You Invested", "Ви вклали") },
+            { "TotalValue", ("Portfolio Value", "Капітал") },
+            { "EnterInflation", ("Enter expected inflation (%, default 3%): ", "Очікувана інфляція (%, за замовчуванням 3%): ") },
+            { "NominalValue", ("Nominal Value", "Номінал ($)") },
+            { "RealValue", ("Real Value", "Реальна вартість") },
+            { "InflationNote", ("*Real Value shows your purchasing power in TODAY'S money.", "*Реальна вартість показує купівельну спроможність у СЬОГОДНІШНІХ цінах.") },
+            { "EnterEndDate", ("Enter target date (dd.MM.yyyy, default +10 years): ", "Введіть кінцеву дату (дд.ММ.рррр, за замовчуванням +10 років): ") },
+            { "InvalidDate", ("Invalid format or date in the past. Use dd.MM.yyyy", "Некоректна дата або дата в минулому. Використовуйте дд.ММ.рррр") },
+            { "MenuOpt5", ("Compound Calculator", "Калькулятор капіталу") },
+            { "EduMenuTitle", ("EDUCATION HUB", "НАВЧАЛЬНИЙ ЦЕНТР") },
+            { "CheatSheetOpt", ("Beginner's Cheat Sheet", "Шпаргалка термінів") },
+            { "CalcOpt", ("Compound Interest Calculator", "Калькулятор складного відсотка") },
+            { "TutWelcome", ("Welcome, future investor! Let's start your financial journey.", "Вітаємо, майбутній інвесторе! Почнемо вашу фінансову подорож.") },
+            { "TutStep1", ("Investing is like planting a tree. The earlier you start, the bigger it grows.", "Інвестування — як посадка дерева. Чим раніше почнеш, тим більшим воно виросте.") },
+            { "TutStep2", ("First, let's learn the basic rules of the game.", "Спочатку вивчимо базові правила цієї гри.") },
+            { "TutReady", ("Awesome! You are ready. Let's go to the Main Menu.", "Чудово! Ви готові. Переходимо до Головного Меню.") },
+            { "PressEnter", ("Press ENTER to continue...", "Натисніть ENTER для продовження...") },
+            { "ClearPortfolio", ("Clear Entire Portfolio", "Очистити весь портфель") },
+            { "ClearConfirm", ("Are you sure? Type YES to confirm: ", "Ви впевнені? Введіть YES для підтвердження: ") },
+            { "PortfolioCleared", ("Portfolio has been completely cleared!", "Портфель повністю очищено!") }
         };
 
         public static string Get(string key)
