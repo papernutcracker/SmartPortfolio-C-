@@ -1,8 +1,8 @@
 {
-  "Language": "uk",
-  "Experience": "Experienced",
+  "Language": "EN",
+  "Experience": 1,
   "Goals": [],
-  "Horizon": "UpTo10Years",
+  "Horizon": 0,
   "HasExistingPortfolio": false,
-  "HasCompletedTutorial": false
+  "HasCompletedTutorial": true
 }

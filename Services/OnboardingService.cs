@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using SmartDividendTracker.Models;
 
 namespace SmartDividendTracker.Services
@@ -11,12 +10,6 @@ namespace SmartDividendTracker.Services
     {
         private readonly string _filePath = "user_profile.json";
 
-        private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
-        {
-            WriteIndented = true,
-            Converters = { new JsonStringEnumConverter() }
-        };
-
         public UserProfile RunOrLoadProfile()
         {
             if (File.Exists(_filePath))
@@ -24,59 +17,72 @@ namespace SmartDividendTracker.Services
                 try
                 {
                     string json = File.ReadAllText(_filePath);
-                    UserProfile loadedProfile = JsonSerializer.Deserialize<UserProfile>(json, _jsonOptions);
-
-                    if (loadedProfile != null)
+                    var profile = JsonSerializer.Deserialize<UserProfile>(json);
+                    if (profile != null)
                     {
-                        return loadedProfile;
+                        return profile;
                     }
                 }
-                catch (JsonException)
+                catch (Exception)
                 {
-                    // Ignore corrupted JSON and create a new profile
+                    // Fallback to create new if reading fails
                 }
             }
 
-            return CreateNewProfile();
+            return RunNewOnboarding();
+        }
+
+        private UserProfile RunNewOnboarding()
+        {
+            Console.Clear();
+
+            string langHeader = "=========================================================\n" +
+                                "          WELCOME TO SMART DIVIDEND TRACKER              \n" +
+                                "=========================================================\n\n" +
+                                "Select your preferred language / Оберіть мову інтерфейсу:";
+
+            var langOptions = new List<string>
+            {
+                "English (EN)",
+                "Українська (UA)"
+            };
+
+            int langChoice = ConsoleHelper.SelectOption(langHeader, langOptions);
+            string selectedLanguage = langChoice == 1 ? "UA" : "EN";
+
+            string expHeader = selectedLanguage == "UA" ?
+                "Оберіть ваш рівень досвіду:" :
+                "Select your investment experience level:";
+
+            var expOptions = selectedLanguage == "UA" ? new List<string>
+            {
+                "Новачок (Beginner)",
+                "Досвідчений (Experienced)"
+            } : new List<string>
+            {
+                "Beginner (I am new to this)",
+                "Experienced (I have an existing portfolio)"
+            };
+
+            int expChoice = ConsoleHelper.SelectOption(expHeader, expOptions);
+            ExperienceLevel selectedExp = expChoice == 1 ? ExperienceLevel.Experienced : ExperienceLevel.Beginner;
+
+            var newProfile = new UserProfile
+            {
+                Language = selectedLanguage,
+                Experience = selectedExp,
+                HasCompletedTutorial = false
+            };
+
+            SaveProfile(newProfile);
+            return newProfile;
         }
 
         public void SaveProfile(UserProfile profile)
         {
-            string jsonString = JsonSerializer.Serialize(profile, _jsonOptions);
-            File.WriteAllText(_filePath, jsonString);
-        }
-
-        private UserProfile CreateNewProfile()
-        {
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("==================================================");
-            Console.WriteLine("   WELCOME TO SMART DIVIDEND PORTFOLIO TRACKER");
-            Console.WriteLine("==================================================\n");
-            Console.ResetColor();
-
-            var profile = new UserProfile();
-
-            var languages = new List<string> { "English", "Українська" };
-            int langChoice = ConsoleHelper.SelectOption("Select your preferred language / Оберіть мову:", languages);
-            profile.Language = langChoice == 0 ? "en" : "uk";
-
-            LocalizationManager.SetLanguage(profile.Language);
-
-            var expOptions = new List<string> { "Beginner", "Intermediate", "Advanced" };
-            int expChoice = ConsoleHelper.SelectOption("Select your experience level / Оберіть рівень досвіду:", expOptions);
-            profile.Experience = (ExperienceLevel)expChoice;
-
-            var horizonOptions = new List<string> { "Up to 5 years", "Up to 10 years", "Long Term (10+ years)" };
-            int horizChoice = ConsoleHelper.SelectOption("Select your investment horizon / Оберіть горизонт:", horizonOptions);
-            profile.Horizon = (InvestmentHorizon)horizChoice;
-
-            profile.Goals = new List<InvestmentGoal> { InvestmentGoal.PassiveIncome };
-
-            profile.HasCompletedTutorial = false;
-
-            SaveProfile(profile);
-            return profile;
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            string json = JsonSerializer.Serialize(profile, options);
+            File.WriteAllText(_filePath, json);
         }
 
         public void OpenSettings(UserProfile profile)
@@ -85,58 +91,94 @@ namespace SmartDividendTracker.Services
 
             while (true)
             {
-                Console.Clear();
-                var options = new List<string>
+                bool isUa = profile.Language.ToString() == "UA" || profile.Language.ToString() == "Ukrainian";
+
+                string expText = profile.Experience.ToString();
+                if (isUa)
                 {
-                    LocalizationManager.Get("ChangeLang"),
-                    LocalizationManager.Get("ChangeExp"),
-                    LocalizationManager.Get("ChangeHorizon"),
-                    LocalizationManager.Get("ResetTutorial"),
-                    LocalizationManager.Get("Back")
+                    expText = profile.Experience == ExperienceLevel.Beginner ? "Новачок" : "Досвідчений";
+                }
+
+                string header = "=========================================================\n" +
+                                (isUa ? "                 НАЛАШТУВАННЯ ПРОФІЛЮ                    \n" : "                   PROFILE SETTINGS                      \n") +
+                                "=========================================================\n\n" +
+                                (isUa ? $"Поточна мова: {profile.Language}\nРівень досвіду: {expText}" : $"Current Language: {profile.Language}\nCurrent Experience Level: {profile.Experience}");
+
+                var options = isUa ? new List<string>
+                {
+                    "Змінити мову",
+                    "Скинути налаштування (Видалити профіль)",
+                    "Повернутися до Головного Меню"
+                } : new List<string>
+                {
+                    "Change Language",
+                    "Factory Reset (Delete Profile & Progress)",
+                    "Back to Main Menu"
                 };
 
-                int choice = ConsoleHelper.SelectOption(LocalizationManager.Get("SettingsTitle"), options, lastChoice);
+                int choice = ConsoleHelper.SelectOption(header, options, lastChoice);
                 lastChoice = choice;
-                string selectedText = options[choice];
 
-                if (selectedText == LocalizationManager.Get("ChangeLang"))
+                if (choice == 0) // Change Language
                 {
-                    var languages = new List<string> { "English", "Українська" };
-                    int langChoice = ConsoleHelper.SelectOption("Select language / Оберіть мову:", languages);
-                    profile.Language = langChoice == 0 ? "en" : "uk";
+                    string langHeader = isUa ? "Оберіть нову мову:" : "Select new language:";
+                    var langOptions = new List<string> { "English (EN)", "Українська (UA)" };
 
-                    LocalizationManager.SetLanguage(profile.Language);
-                    SaveProfile(profile);
-                }
-                else if (selectedText == LocalizationManager.Get("ChangeExp"))
-                {
-                    var expOptions = new List<string> { "Beginner", "Intermediate", "Advanced" };
-                    int expChoice = ConsoleHelper.SelectOption("Select your experience level / Оберіть рівень досвіду:", expOptions);
-                    profile.Experience = (ExperienceLevel)expChoice;
-                    SaveProfile(profile);
-                }
-                else if (selectedText == LocalizationManager.Get("ChangeHorizon"))
-                {
-                    var horizonOptions = new List<string> { "Up to 5 years", "Up to 10 years", "Long Term (10+ years)" };
-                    int horizChoice = ConsoleHelper.SelectOption("Select your investment horizon / Оберіть горизонт:", horizonOptions);
-                    profile.Horizon = (InvestmentHorizon)horizChoice;
-                    SaveProfile(profile);
-                }
-                else if (selectedText == LocalizationManager.Get("ResetTutorial"))
-                {
-                    profile.HasCompletedTutorial = false;
+                    int newLangChoice = ConsoleHelper.SelectOption(langHeader, langOptions);
+                    profile.Language = newLangChoice == 1 ? "UA" : "EN";
+
                     SaveProfile(profile);
 
+                    Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"\n{LocalizationManager.Get("TutResetSuccess")}");
+                    Console.WriteLine(profile.Language == "UA" ? "\nМову успішно оновлено!" : "\nLanguage updated successfully!");
                     Console.ResetColor();
-                    Console.WriteLine("\nPress any key to return...");
+                    Console.WriteLine(profile.Language == "UA" ? "Натисніть будь-яку клавішу для продовження..." : "Press any key to continue...");
                     Console.ReadKey(true);
                 }
-                else
+                else if (choice == 1) // Factory Reset
+                {
+                    ResetProfile(isUa);
+                }
+                else if (choice == 2) // Back to Main Menu
                 {
                     break;
                 }
+            }
+        }
+
+        public void ResetProfile(bool isUa)
+        {
+            string header = isUa ?
+                            "!!! УВАГА !!!\nВи збираєтеся видалити свій профіль, налаштування та прогрес.\nВи впевнені, що хочете повністю видалити профіль?" :
+                            "!!! WARNING !!!\nYou are about to delete your profile, settings, and tutorial progress.\nAre you sure you want to completely delete your profile?";
+
+            var options = isUa ? new List<string>
+            {
+                "НІ, Скасувати дію",
+                "ТАК, Видалити все"
+            } : new List<string>
+            {
+                "NO, Cancel Action",
+                "YES, Delete Everything"
+            };
+
+            int confirmChoice = ConsoleHelper.SelectOption(header, options);
+
+            if (confirmChoice == 1) // YES
+            {
+                if (File.Exists(_filePath))
+                {
+                    File.Delete(_filePath);
+                }
+
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(isUa ? "\nПрофіль успішно видалено. Програму буде закрито." : "\nProfile successfully deleted. The application will now close.");
+                Console.ResetColor();
+                Console.WriteLine(isUa ? "Будь ласка, запустіть програму знову, щоб створити новий профіль." : "Please restart the app to create a new profile from scratch.");
+                Console.ReadKey(true);
+                Environment.Exit(0);
             }
         }
     }
