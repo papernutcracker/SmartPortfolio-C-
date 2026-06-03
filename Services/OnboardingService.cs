@@ -36,10 +36,10 @@ namespace SmartDividendTracker.Services
         {
             Console.Clear();
 
-            string langHeader = "=========================================================\n" +
-                                "          WELCOME TO SMART DIVIDEND TRACKER              \n" +
-                                "=========================================================\n\n" +
-                                "Select your preferred language / Оберіть мову інтерфейсу:";
+            // ФІКС: Додано тонку внутрішню лінію, яка ідеально розділяє заголовок та мови
+            string langHeader = "    WELCOME TO SMART DIVIDEND TRACKER\n" +
+                                "---------------------------------------\n" +
+                                "Select your preferred language /\nОберіть мову інтерфейсу:";
 
             var langOptions = new List<string>
             {
@@ -99,9 +99,8 @@ namespace SmartDividendTracker.Services
                     expText = profile.Experience == ExperienceLevel.Beginner ? "Новачок" : "Досвідчений";
                 }
 
-                string header = "=========================================================\n" +
-                                (isUa ? "                 НАЛАШТУВАННЯ ПРОФІЛЮ                    \n" : "                   PROFILE SETTINGS                      \n") +
-                                "=========================================================\n\n" +
+                string title = isUa ? "      НАЛАШТУВАННЯ ПРОФІЛЮ" : "        PROFILE SETTINGS";
+                string header = $"{title}\n\n" +
                                 (isUa ? $"Поточна мова: {profile.Language}\nРівень досвіду: {expText}" : $"Current Language: {profile.Language}\nCurrent Experience Level: {profile.Experience}");
 
                 var options = isUa ? new List<string>

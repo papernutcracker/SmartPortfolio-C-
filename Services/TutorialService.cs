@@ -44,9 +44,6 @@ namespace SmartDividendTracker.Services
             while (true)
             {
                 Console.Clear();
-
-                // ФІКС: Прибираємо зайві лінії та відступи. 
-                // Текст автоматично загорнеться в ідеальну рамку всередині ConsoleHelper!
                 string header = $"  {LocalizationManager.Get("EduMenuTitle").ToUpper()}";
 
                 var options = profile.Language == "UA" ? new List<string>
@@ -56,7 +53,7 @@ namespace SmartDividendTracker.Services
                     "3. Фінансові інструменти",
                     "4. Аналіз ринку",
                     "5. Стратегія портфеля",
-                    "6. ПОВНИЙ КАТАЛОГ АКТИВІВ",
+                    "6. Перелік популярних тікерів",
                     LocalizationManager.Get("Back")
                 } : new List<string>
                 {
@@ -65,7 +62,7 @@ namespace SmartDividendTracker.Services
                     "3. Financial Instruments",
                     "4. Market Analysis",
                     "5. Portfolio Strategy",
-                    "6. FULL ASSET CATALOG",
+                    "6. List of popular tickers",
                     LocalizationManager.Get("Back")
                 };
 
@@ -84,27 +81,199 @@ namespace SmartDividendTracker.Services
             if (topicIndex == 5)
             {
                 PrintFullAssetTable(isUa);
+                return;
+            }
+
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine("=========================================================================================");
+            Console.WriteLine(isUa ? "   ДЕТАЛЬНИЙ НАВЧАЛЬНИЙ ОГЛЯД МАТЕРІАЛУ" : "   DETAILED EDUCATIONAL OVERVIEW");
+            Console.WriteLine("=========================================================================================\n");
+            Console.ResetColor();
+
+            if (isUa)
+            {
+                switch (topicIndex)
+                {
+                    case 0: // Особистий фінансовий план
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine("## 1. ОСОБИСТИЙ ФІНАНСОВИЙ ПЛАН\n");
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("=== Постановка фінансових цілей ===");
+                        Console.ResetColor();
+                        Console.WriteLine("Етап постановки фінансових цілей є критично важливим для інвестора. Без чітких цілей\n" +
+                                          "виникає ризик витрачання заощаджень на неважливі речі, а також ризик руху в хибному\n" +
+                                          "напрямку або повної зупинки розвитку. Техніки роботи з цілями:\n");
+                        Console.WriteLine("• Техніка «Колесо»: Допомагає поділити весь шлях до глобальної мети на окремі сегменти.");
+                        Console.WriteLine("• Техніка WOOP: Визначення мети -> опис результату -> виявлення перешкод -> план дій.");
+                        Console.WriteLine("• Система SMART: Перевірка цілі на конкретність, вимірність, досяжність, релевантність та час.\n");
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("=== Врахування інфляції ===");
+                        Console.ResetColor();
+                        Console.WriteLine("Інфляція — головний ворог заощаджень. Історичні середні значення:\n" +
+                                          "Гривня: ~11% | Долар США: ~2.14% | Євро: ~1.77%\n\n");
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("=== Складові таблиці фінансового плану ===");
+                        Console.ResetColor();
+                        Console.WriteLine("Для плану розраховуються: необхідний дохід, поточний дохід, термін досягнення,\n" +
+                                          "вартість цілі зараз, вартість у майбутньому (з інфляцією) та щомісячний внесок.\n" +
+                                          "Більш детальні розрахунки можна зробити у калькуляторах");
+                        break;
+
+                    case 1: // Інфраструктура фондового ринку та вибір брокера
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine("## 2. ІНФРАСТРУКТУРА ФОНДОВОГО РИНКУ ТА ВИБІР БРОКЕРА\n");
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("=== Поняття фондового ринку та біржі ===");
+                        Console.ResetColor();
+                        Console.WriteLine("Фондовий ринок — частина фінансової системи, де купують/продають електронні цінні папери.\n" +
+                                          "Фондова біржа — ліцензований майданчик, який забезпечує ліквідність та прозорість.\n" +
+                                          "Торгові сесії (за Києвом):\n" +
+                                          "• Азійсько-Тихоокеанська: 03:00 - 11:00\n" +
+                                          "• Європейська: 09:00 - 18:30\n" +
+                                          "• Американська (NYSE, NASDAQ): 16:30 - 23:00\n");
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("=== Критерії аналізу та вибору брокера ===");
+                        Console.ResetColor();
+                        Console.WriteLine("Інвестувати можна виключно через сертифікованого брокера. Критерії оцінки:\n" +
+                                          "1. Наявність ліцензії авторитетного регулятора (не офшор).\n" +
+                                          "2. Тарифи та комісії за угоди й виведення коштів.\n" +
+                                          "3. Сума страхового покриття рахунку (захист на випадок банкрутства).\n" +
+                                          "4. Доступ до світових ринків та історія/масштаби компанії.\n");
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("=== Рекомендовані брокери та безпека ===");
+                        Console.ResetColor();
+                        Console.WriteLine("• Interactive Brokers (США): Без мін. депозиту, страховка до $500k, комісії від $0.35\n" +
+                                          "• Degiro (Нідерланди): Мін. депозит $10, страховка до €100k, комісії $1-2\n" +
+                                          "• XTB (Польща): Без мін. депозиту, комісія за фізичні акції 0%\n\n" +
+                                          "🛑 Червоні прапорці шахрайства: відсутність ліцензії, пропозиції позик, заклики в IPO\n" +
+                                          "через месенджери, робочі роботи. У США ліцензії перевіряють через FINRA (BrokerCheck).");
+                        break;
+
+                    case 2: // Фінансові інструменти
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine("## 3. ФІНАНСОВІ ІНСТРУМЕНТИ\n");
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("=== 1. Акції (Пайові цінні папери) ===");
+                        Console.ResetColor();
+                        Console.WriteLine("• Звичайні: дають право голосу та дивіденди.\n" +
+                                          "• Привілейовані: мають фіксований дохід, але обмежене право голосу.\n" +
+                                          "• Стратегії: акції зростання (без дивідендів: Tesla, Amazon) та акції вартості (Berkshire Hathaway).\n" +
+                                          "• Найнадійніші компанії — «блакитні фішки». Дивідендні аристократи збільшують виплати 25+ років.");
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("\n=== 2. IPO (Initial Public Offering) ===");
+                        Console.ResetColor();
+                        Console.WriteLine("Перший публічний продаж акцій компанії. Важливий Lock-up період (90–180 днів),\n" +
+                                          "протягом якого ранні інвестори та засновники не мають права продавати папери.");
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("\n=== 3. Облігації (Боргові цінні папери) ===");
+                        Console.ResetColor();
+                        Console.WriteLine("Позика емітенту під фіксований купон. Рівні: Інвестиційний (AAA до BBB) та Сміттєвий (BB і нижче).\n" +
+                                          "Головний закон: чим вища купонна прибутковість, тим вищий ризик дефолту.");
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("\n=== 4. Індекси, ETF, REIT та Метали ===");
+                        Console.ResetColor();
+                        Console.WriteLine("• ETF (Exchange Traded Fund): готовий диверсифікований кошик акцій за певним індексом (напр. S&P 500).\n" +
+                                          "• REIT (Фонди нерухомості): зобов'язані виплачувати не менше 90% чистого доходу як дивіденди.\n" +
+                                          "• Дорогоцінні метали: інвестиції через зливки, монети, або товарні ETF (GLD, IAU, SLV).");
+                        break;
+
+                    case 3: // Аналіз ринку та компаній
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine("## 4. АНАЛІЗ РИНКУ ТА КОМПАНІЙ\n");
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("=== Технічний аналіз ===");
+                        Console.ResetColor();
+                        Console.WriteLine("Базується на свічкових графіках (японські свічки: Open, Close, High, Low).\n" +
+                                          "Математичний індикатор RSI (Індекс відносної сили):\n" +
+                                          "• RSI > 70: Стан перекупленості (ціна завищена, купувати не рекомендується).\n" +
+                                          "• RSI 30-70: Справедлива поточна ринкова ціна.\n" +
+                                          "• RSI < 30: Стан перепроданості (актив активно скидають, чудовий момент для покупки).\n");
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("=== Фундаментальний аналіз компанії ===");
+                        Console.ResetColor();
+                        Console.WriteLine("Глибоке вивчення бізнесу за 5 етапами: аналіз діяльності -> клієнти та географія\n" +
+                                          "-> фактори попиту -> конкурентне середовище -> плани масштабування.\n");
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("=== Оцінка фінансової звітності та макроекономіка ===");
+                        Console.ResetColor();
+                        Console.WriteLine("• Income Statement: Виручка, чистий прибуток, EPS, EBITDA.\n" +
+                                          "• Balance Sheet: Активи (Assets) проти зобов'язань (Liabilities). Борг має бути меншим за капітал.\n" +
+                                          "• Cash Flow Statement: Реальний рух грошей від операційної, інвестиційної та фін. діяльності.\n" +
+                                          "• Макропоказники: ВВП (зменшення = криза), Безробіття, Інфляція та Кредитна ставка ЦБ.");
+                        break;
+
+                    case 4: // Створення інвестиційного портфеля
+                        Console.ForegroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine("## 5. СТВОРЕННЯ ІНВЕСТИЦІЙНОГО ПОРТФЕЛЯ\n");
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("=== Визначення ризик-профілю інвестора ===");
+                        Console.ResetColor();
+                        Console.WriteLine("Залежить від часового горизонту та стійкості до волатильності ринку:\n" +
+                                          "• Консервативна стратегія: збереження капіталу (середня прибутковість ~7% річних).\n" +
+                                          "• Помірна стратегія: збалансований довгостроковий приріст (~9% річних).\n" +
+                                          "• Агресивна стратегія: максимізація прибутків через волатильні активи та крипту.\n" +
+                                          "Активи повинні мати негативну або низьку кореляцію (синхронність руху цін) для захисту.");
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("\n=== Формування портфеля за принципом TOP DOWN (Зверху вниз) ===");
+                        Console.ResetColor();
+                        Console.WriteLine("1. Розподіл за регіонами: Розвинені ринки (Developed) та ринки, що ростуть (Emerging).\n" +
+                                          "2. Аналіз конкретної країни (макропоказники, політика).\n" +
+                                          "3. Аналіз секторів відповідно до фази бізнес-циклу:\n" +
+                                          "   - Фаза зростання: Циклічні сектори (Фінанси, Технології, Промисловість, Нерухомість).\n" +
+                                          "   - Фаза рецесії: Оборонні сектори (Товари першої необхідності, Охорона здоров'я, Комунальні послуги).\n" +
+                                          "4. Фундаментальний відбір компаній у межах обраного сектору (мультиплікатори).\n" +
+                                          "5. Технічний аналіз (пошук точок входу на ринок через індикатор RSI).\n");
+
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("=== Обслуговування стратегії ===");
+                        Console.ResetColor();
+                        Console.WriteLine("Включає плановий огляд портфеля, щорічне ребалансування (відновлення часток часток),\n" +
+                                          "реінвестування дивідендів та коригування плану під життєві обставини.");
+                        break;
+                }
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.WriteLine("=========================================================");
-                Console.WriteLine(isUa ? "   ДЕТАЛЬНА ІНФОРМАЦІЯ" : "   DETAILED INFORMATION");
-                Console.WriteLine("=========================================================\n");
-                Console.ResetColor();
-
+                // Англійська локалізація (короткі тези для збереження білінгвальності структури)
                 switch (topicIndex)
                 {
-                    case 0: Console.WriteLine(isUa ? "Психологічна підготовка: Опрацювання вторинних вигод від незаробляння грошей, формування довгострокового мислення." : "Psychological prep: Shifting focus to long-term mindset and money habits."); break;
-                    case 1: Console.WriteLine(isUa ? "Брокери: Вибір надійного партнера з регуляцією (Interactive Brokers, XTB). Податки та декларації." : "Brokers: Choosing reliable regulated platforms (IBKR, XTB). Tax compliance."); break;
-                    case 2: Console.WriteLine(isUa ? "Інструменти: Акції (частка в бізнесі), ETF (готові фонди), Облігації (боргові розписки)." : "Instruments: Stocks (business shares), ETFs (diversified baskets), Bonds (fixed income)."); break;
-                    case 3: Console.WriteLine(isUa ? "Аналіз: 11 секторів економіки. Фундаментальні мультиплікатори: P/E, P/S, Payout Ratio, дивидендна історія." : "Analysis: 11 market sectors. Key fundamental metrics: P/E, Dividend History, Payout Ratio."); break;
-                    case 4: Console.WriteLine(isUa ? "Стратегія: Дивідендна (фокус на грошовий потік), Ростова (Growth), або збалансоване індексування (VOO/SPY)." : "Strategy: Dividend Income (cash flow focus) vs Capital Growth vs Index Investing."); break;
+                    case 0:
+                        Console.WriteLine("Financial Plan: Goals settings (SMART, WOOP), Inflation formulas (FV = PV*(1+i)^n) and allocation tables.");
+                        break;
+                    case 1:
+                        Console.WriteLine("Infrastructure & Brokers: Market sessions, broker selection criteria, regulated agents (IBKR, Degiro, XTB), and FINRA validation.");
+                        break;
+                    case 2:
+                        Console.WriteLine("Financial Instruments: Stocks (Growth vs Value, Blue Chips), IPOs (Lock-up rules), Bonds (Credit ratings), ETFs, REITs, and Commodities.");
+                        break;
+                    case 3:
+                        Console.WriteLine("Market Analysis: Technical Analysis (Candlesticks, RSI thresholds), Fundamental Analysis steps, Financial Statements analysis, and Macro indicators.");
+                        break;
+                    case 4:
+                        Console.WriteLine("Portfolio Strategy: Risk-profiling, TOP-DOWN asset allocation framework, correlation matrices, and strategy rebalancing techniques.");
+                        break;
                 }
-                Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
-                Console.ReadKey(true);
             }
+
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
+            Console.ReadKey(true);
+            Console.ResetColor();
         }
 
         private static ConsoleColor GetSectorColor(string sector)
