@@ -43,14 +43,13 @@ namespace SmartDividendTracker.Services
             ) },
             { "MenuOpt4", ("Profile Settings", "Налаштування профілю") },
             
-            // --- ОСЬ ЦІ КЛЮЧІ БУЛИ ПРОПУЩЕНІ ДЛЯ НАЛАШТУВАНЬ ---
             { "SettingsTitle", ("SETTINGS", "НАЛАШТУВАННЯ") },
             { "ChangeLang", ("Change Language", "Змінити мову") },
             { "ChangeExp", ("Change Experience Level", "Змінити рівень досвіду") },
             { "ChangeHorizon", ("Change Investment Horizon", "Змінити горизонт інвестування") },
             { "ResetTutorial", ("Reset Tutorial", "Скинути навчання (Туторіал)") },
             { "TutResetSuccess", ("Tutorial status has been reset! It will launch on next restart.", "Статус навчання скинуто! Воно запуститься при наступному старті.") },
-            // ---------------------------------------------------
+
 
             { "SettingsMenu", ("PROFILE SETTINGS", "НАЛАШТУВАННЯ ПРОФІЛЮ") },
             { "SetGoals", ("Change Investment Goals", "Змінити цілі інвестування") },
@@ -98,7 +97,6 @@ namespace SmartDividendTracker.Services
             { "CalcOpt", ("Compound Interest Calculator", "Калькулятор складного відсотка") },
             { "TutWelcome", ("Welcome, future investor! Let's start your financial journey.", "Вітаємо, майбутній інвесторе! Почнемо вашу фінансову подорож.") },
             { "TutStep1", ("Investing is like planting a tree. The earlier you start, the bigger it grows.", "Інвестування — як посадка дерева. Чим раніше почнеш, тим більшим воно виросте.") },
-            { "TutStep2", ("First, let's learn the basic rules of the game.", "Спочатку вивчимо базові правила цієї гри.") },
             { "TutReady", ("Awesome! You are ready. Let's go to the Main Menu.", "Чудово! Ви готові. Переходимо до Головного Меню.") },
             { "PressEnter", ("Press ENTER to continue...", "Натисніть ENTER для продовження...") },
             { "ClearPortfolio", ("Clear Entire Portfolio", "Очистити весь портфель") },

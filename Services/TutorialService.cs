@@ -17,9 +17,7 @@ namespace SmartDividendTracker.Services
 
             string[] steps = {
                 LocalizationManager.Get("TutWelcome"),
-                LocalizationManager.Get("TutStep1"),
-                LocalizationManager.Get("TutStep2"),
-                LocalizationManager.Get("TutReady")
+                LocalizationManager.Get("TutStep1")
             };
 
             foreach (var step in steps)

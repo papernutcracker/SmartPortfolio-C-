@@ -7,12 +7,10 @@ namespace SmartDividendTracker.Models
         public string Language { get; set; } = "en";
         public ExperienceLevel Experience { get; set; }
 
-        // ТЕПЕР ЦЕ СПИСОК ЦІЛЕЙ
         public List<InvestmentGoal> Goals { get; set; } = new List<InvestmentGoal>();
 
         public InvestmentHorizon Horizon { get; set; }
         public bool HasExistingPortfolio { get; set; }
-        // Додай це до існуючих властивостей (Language, Experience, тощо)
         public bool HasCompletedTutorial { get; set; } = false;
     }
 }

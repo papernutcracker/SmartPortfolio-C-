@@ -1,6 +1,5 @@
 ﻿namespace SmartDividendTracker.Models
 {
-    // Абстрактний базовий клас для будь-якого активу
     public abstract class Asset
     {
         public string Ticker { get; set; }

@@ -13,7 +13,6 @@
         LongTerm = 3
     }
 
-    // НОВИЙ ENUM ДЛЯ ЦІЛЕЙ
     public enum InvestmentGoal
     {
         PassiveIncome = 1,

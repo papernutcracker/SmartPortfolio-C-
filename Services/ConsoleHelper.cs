@@ -5,12 +5,9 @@ namespace SmartDividendTracker.Services
 {
     public static class ConsoleHelper
     {
-
-        // МЕНЮ ОДИНАРНОГО ВИБОРУ (З кольорами)
-        // МЕНЮ ОДИНАРНОГО ВИБОРУ
         public static int SelectOption(string prompt, List<string> options, int defaultIndex = 0)
         {
-            int selectedIndex = defaultIndex; // Тепер курсор починає не з нуля, а з пам'яті
+            int selectedIndex = defaultIndex;
             Console.CursorVisible = false;
 
             while (true)
@@ -39,13 +36,11 @@ namespace SmartDividendTracker.Services
                     }
                 }
 
-                // ВИПРАВЛЕННЯ: Очищуємо буфер від випадкових "подвійних" натискань
                 while (Console.KeyAvailable)
                 {
                     Console.ReadKey(true);
                 }
 
-                // Тепер безпечно читаємо клавішу
                 var key = Console.ReadKey(true).Key;
 
                 if (key == ConsoleKey.UpArrow)
@@ -62,13 +57,12 @@ namespace SmartDividendTracker.Services
                 {
                     Console.CursorVisible = true;
                     Console.Clear();
-                    System.Threading.Thread.Sleep(100); // Додаткова мікропауза для стабільності
+                    System.Threading.Thread.Sleep(100);
                     return selectedIndex;
                 }
             }
         }
 
-        // МЕНЮ МУЛЬТИ-ВИБОРУ
         public static List<int> SelectMultipleOptions(string prompt, List<string> options)
         {
             int selectedIndex = 0;
@@ -112,7 +106,6 @@ namespace SmartDividendTracker.Services
                     }
                 }
 
-                // ВИПРАВЛЕННЯ: Очищуємо буфер тут також
                 while (Console.KeyAvailable)
                 {
                     Console.ReadKey(true);
@@ -143,38 +136,35 @@ namespace SmartDividendTracker.Services
 
                     Console.CursorVisible = true;
                     Console.Clear();
-                    System.Threading.Thread.Sleep(100); // Мікропауза
+                    System.Threading.Thread.Sleep(100); 
                     return new List<int>(checkedIndexes);
                 }
             }
         }
 
-        // НОВИЙ МЕТОД: Анімація виходу
         public static void ShowExitAnimation(string message)
         {
             Console.Clear();
             Console.CursorVisible = false;
-            Console.ForegroundColor = ConsoleColor.Cyan; // Робимо текст красивого кольору
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("\n\n");
             Console.Write("     ");
 
-            // Ефект друкарської машинки (по одному символу)
             foreach (char c in message)
             {
                 Console.Write(c);
-                System.Threading.Thread.Sleep(40); // Затримка 40 мілісекунд між літерами
+                System.Threading.Thread.Sleep(40);
             }
 
-            // Анімація крапок (ніби йде завантаження)
             for (int i = 0; i < 3; i++)
             {
                 Console.Write(" .");
-                System.Threading.Thread.Sleep(500); // Затримка півсекунди
+                System.Threading.Thread.Sleep(500);
             }
 
             Console.ResetColor();
             Console.WriteLine("\n\n");
-            System.Threading.Thread.Sleep(500); // Фінальна пауза перед закриттям вікна
+            System.Threading.Thread.Sleep(500); 
         }
     }
 }

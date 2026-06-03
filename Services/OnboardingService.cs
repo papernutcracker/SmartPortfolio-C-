@@ -25,7 +25,6 @@ namespace SmartDividendTracker.Services
                 }
                 catch (Exception)
                 {
-                    // Fallback to create new if reading fails
                 }
             }
 
@@ -36,7 +35,6 @@ namespace SmartDividendTracker.Services
         {
             Console.Clear();
 
-            // ФІКС: Додано тонку внутрішню лінію, яка ідеально розділяє заголовок та мови
             string langHeader = "    WELCOME TO SMART DIVIDEND TRACKER\n" +
                                 "---------------------------------------\n" +
                                 "Select your preferred language /\nОберіть мову інтерфейсу:";
@@ -118,7 +116,7 @@ namespace SmartDividendTracker.Services
                 int choice = ConsoleHelper.SelectOption(header, options, lastChoice);
                 lastChoice = choice;
 
-                if (choice == 0) // Change Language
+                if (choice == 0)
                 {
                     string langHeader = isUa ? "Оберіть нову мову:" : "Select new language:";
                     var langOptions = new List<string> { "English (EN)", "Українська (UA)" };
@@ -135,11 +133,11 @@ namespace SmartDividendTracker.Services
                     Console.WriteLine(profile.Language == "UA" ? "Натисніть будь-яку клавішу для продовження..." : "Press any key to continue...");
                     Console.ReadKey(true);
                 }
-                else if (choice == 1) // Factory Reset
+                else if (choice == 1)
                 {
                     ResetProfile(isUa);
                 }
-                else if (choice == 2) // Back to Main Menu
+                else if (choice == 2)
                 {
                     break;
                 }
@@ -164,7 +162,7 @@ namespace SmartDividendTracker.Services
 
             int confirmChoice = ConsoleHelper.SelectOption(header, options);
 
-            if (confirmChoice == 1) // YES
+            if (confirmChoice == 1)
             {
                 if (File.Exists(_filePath))
                 {

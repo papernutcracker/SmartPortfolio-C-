@@ -56,10 +56,8 @@ namespace SmartDividendTracker.Services
             while (true)
             {
                 Console.Write(prompt);
-                // Замінюємо кому на крапку для уніфікації введення користувачем
                 string input = Console.ReadLine()?.Replace(",", ".") ?? "";
 
-                // Парсимо інваріантно (завжди очікує крапку як роздільник)
                 if (decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal value) && value >= 0)
                 {
                     return value;

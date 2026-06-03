@@ -7,7 +7,6 @@ namespace SmartDividendTracker.Services
     {
         public static void Run(bool isUa)
         {
-            // === ЕТАП 1: ТЕОРЕТИЧНЕ ПОЯСНЕННЯ (З ТВОГО ТЕКСТУ) ===
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("=========================================================");
@@ -74,8 +73,6 @@ namespace SmartDividendTracker.Services
 
             Console.ReadKey(true);
 
-
-            // === ЕТАП 2: ВВЕДЕННЯ ДАНИХ КОРИСТУВАЧЕМ ===
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("=========================================================");
@@ -87,11 +84,9 @@ namespace SmartDividendTracker.Services
             int years = (int)GetInput(isUa ? "2. Через скільки років плануєш купівлю: " : "2. Target horizon (years): ");
             decimal annualReturn = GetInput(isUa ? "3. Очікувана річна дохідність інвестицій (%): " : "3. Expected annual return (%): ");
 
-            // Крок 1. Рахуємо реальну ціну з урахуванням інфляції долара (2.14%)
             double inflationRate = 0.0214;
             double futurePrice = (double)currentPrice * Math.Pow(1 + inflationRate, years);
 
-            // Крок 2. Рахуємо річний та щомісячний внесок за формулою ануїтету
             double r = (double)annualReturn / 100;
             double annualContribution = 0;
 
@@ -107,8 +102,6 @@ namespace SmartDividendTracker.Services
 
             double monthlyContribution = annualContribution / 12;
 
-
-            // === ЕТАП 3: ВИВІД ПЕРСОНАЛЬНИХ РЕЗУЛЬТАТІВ ТА ЧЕК-ЛИСТА ===
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("\n=========================================================");
             Console.WriteLine(isUa ? "                   РОЗРАХУНОК ПЛАНУ                      " : "                    PLAN CALCULATIONS                    ");
@@ -130,7 +123,6 @@ namespace SmartDividendTracker.Services
                 : $"➜ You need to invest per month:                              ${monthlyContribution:F2}");
             Console.ResetColor();
 
-            // Оновлений лаконічний Чек-лист без згадки про зошити
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("\n---------------------------------------------------------");
             Console.WriteLine(isUa ? "📋 ЩО ТОБІ ПОТРІБНО ЗРОБИТИ ЗАРАЗ (ЧЕК-ЛИСТ):" : "📋 YOUR NEXT STEPS (CHECKLIST):");
@@ -160,7 +152,7 @@ namespace SmartDividendTracker.Services
             Console.ResetColor();
 
             Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}"); //
+            Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}"); 
             Console.ReadKey(true);
             Console.ResetColor();
         }
@@ -170,7 +162,7 @@ namespace SmartDividendTracker.Services
             while (true)
             {
                 Console.Write(prompt);
-                string input = Console.ReadLine()?.Replace(",", ".") ?? ""; //
+                string input = Console.ReadLine()?.Replace(",", ".") ?? "";
 
                 if (decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal value) && value >= 0) //
                 {
@@ -178,7 +170,7 @@ namespace SmartDividendTracker.Services
                 }
 
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(LocalizationManager.Get("InvalidInput")); //
+                Console.WriteLine(LocalizationManager.Get("InvalidInput"));
                 Console.ResetColor();
             }
         }

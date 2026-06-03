@@ -13,7 +13,6 @@ namespace SmartDividendTracker.Services
 
         public PortfolioManager()
         {
-            // Автоматично завантажуємо активи під час створення менеджера
             LoadPortfolio();
         }
 
@@ -21,14 +20,13 @@ namespace SmartDividendTracker.Services
 
         public void AddStock(DividendStock stock)
         {
-            // Якщо акція з таким тікером вже є — розумно усереднюємо позицію
             var existing = _stocks.Find(s => s.Ticker.Equals(stock.Ticker, StringComparison.OrdinalIgnoreCase));
             if (existing != null)
             {
                 int totalShares = existing.Shares + stock.Shares;
                 existing.AveragePrice = ((existing.AveragePrice * existing.Shares) + (stock.AveragePrice * stock.Shares)) / totalShares;
                 existing.Shares = totalShares;
-                existing.DividendYield = stock.DividendYield; // Оновлюємо актуальну дохідність
+                existing.DividendYield = stock.DividendYield; 
                 existing.PeRatio = stock.PeRatio;
             }
             else
@@ -65,7 +63,6 @@ namespace SmartDividendTracker.Services
             return total;
         }
 
-        // 🔥 НАША НОВА ФІЧА:ASCII-графіка часток секторів портфеля!
         public void PrintSectorDiversification(bool isUa)
         {
             Console.Clear();
@@ -85,7 +82,6 @@ namespace SmartDividendTracker.Services
                 return;
             }
 
-            // Групуємо активи та сумуємо їхню вартість за секторами
             var sectorGroups = new Dictionary<string, decimal>();
             foreach (var stock in _stocks)
             {
@@ -127,7 +123,7 @@ namespace SmartDividendTracker.Services
                 Console.Write(new string('█', barLength));
 
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.Write(new string('░', 25 - barLength)); // Заповнюємо решту порожнечею
+                Console.Write(new string('░', 25 - barLength));
 
                 Console.ResetColor();
                 Console.WriteLine($" {pct:F1}% (${group.Value:F2})");
@@ -142,7 +138,7 @@ namespace SmartDividendTracker.Services
                 string json = JsonSerializer.Serialize(_stocks, options);
                 File.WriteAllText(_filePath, json);
             }
-            catch (Exception) { /* Захист від збоїв запису */ }
+            catch (Exception) {}
         }
 
         private void LoadPortfolio()
