@@ -44,9 +44,10 @@ namespace SmartDividendTracker.Services
             while (true)
             {
                 Console.Clear();
-                string header = "=========================================================\n" +
-                                $"                  {LocalizationManager.Get("EduMenuTitle")}                       \n" +
-                                "=========================================================\n\n";
+
+                // ФІКС: Прибираємо зайві лінії та відступи. 
+                // Текст автоматично загорнеться в ідеальну рамку всередині ConsoleHelper!
+                string header = $"  {LocalizationManager.Get("EduMenuTitle").ToUpper()}";
 
                 var options = profile.Language == "UA" ? new List<string>
                 {
@@ -133,13 +134,11 @@ namespace SmartDividendTracker.Services
             Console.BackgroundColor = ConsoleColor.DarkBlue;
             Console.ForegroundColor = ConsoleColor.White;
 
-            // Збільшено ширину колонки Сектор до -22 символів для UA
             Console.WriteLine(isUa ?
                 $"| {"Тікер",-8} | {"Сектор",-22} | {"Дохідн.",-7} | {"P/E",-6} |" :
                 $"| {"Ticker",-8} | {"Sector",-12} | {"Yield",-7} | {"P/E",-6} |");
             Console.ResetColor();
 
-            // Загальна довжина рядка для укр версії тепер становить рівно 56 символів
             Console.WriteLine(new string('-', isUa ? 56 : 45));
 
             var assets = new List<string[]> {
@@ -184,12 +183,11 @@ namespace SmartDividendTracker.Services
                         "REIT" => "Нерухомість (REIT)",
                         "ETF/Index" => "ETF / Індекс",
                         "Metals" => "Дорогоцінні метали",
-                        "Miners" => "Шахти цінн. мет.",
+                        "Miners" => "Видобуток",
                         _ => sector
                     };
                 }
 
-                // Використовуємо -22 для вирівнювання сектора в UA розкладці
                 Console.WriteLine(isUa
                     ? $"| {ticker,-8} | {sector,-22} | {yield,-7} | {pe,-6} |"
                     : $"| {ticker,-8} | {sector,-12} | {yield,-7} | {pe,-6} |");
