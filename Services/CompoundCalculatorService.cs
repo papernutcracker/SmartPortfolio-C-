@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace SmartDividendTracker.Services
 {
@@ -13,34 +14,24 @@ namespace SmartDividendTracker.Services
             Console.WriteLine("=========================================================\n");
             Console.ResetColor();
 
-            // Збираємо дані
-            decimal principal = GetInput(isUa ? "Початковий капітал ($): " : "Initial Investment ($): ", isUa);
-            decimal monthlyContribution = GetInput(isUa ? "Щомісячне поповнення ($): " : "Monthly Contribution ($): ", isUa);
-            decimal annualRate = GetInput(isUa ? "Очікувана річна дохідність (%): " : "Expected Annual Return (%): ", isUa);
-            int years = (int)GetInput(isUa ? "Термін інвестування (років): " : "Investment Horizon (years): ", isUa);
+            decimal principal = GetInput(isUa ? "Початковий капітал ($): " : "Initial Investment ($): ");
+            decimal monthlyContribution = GetInput(isUa ? "Щомісячне поповнення ($): " : "Monthly Contribution ($): ");
+            decimal annualRate = GetInput(isUa ? "Очікувана річна дохідність (%): " : "Expected Annual Return (%): ");
+            int years = (int)GetInput(isUa ? "Термін інвестування (років): " : "Investment Horizon (years): ");
 
-            // Математика складного відсотка
             double r = (double)annualRate / 100;
-            int n = 12; // Капіталізація щомісяця
+            int n = 12;
             int t = years;
 
             double futureValuePrincipal = (double)principal * Math.Pow(1 + r / n, n * t);
-            double futureValueContributions = 0;
-
-            if (r > 0)
-            {
-                futureValueContributions = (double)monthlyContribution * ((Math.Pow(1 + r / n, n * t) - 1) / (r / n));
-            }
-            else
-            {
-                futureValueContributions = (double)monthlyContribution * n * t;
-            }
+            double futureValueContributions = r > 0
+                ? (double)monthlyContribution * ((Math.Pow(1 + r / n, n * t) - 1) / (r / n))
+                : (double)monthlyContribution * n * t;
 
             double totalFutureValue = futureValuePrincipal + futureValueContributions;
             double totalInvested = (double)principal + ((double)monthlyContribution * n * t);
             double totalInterest = totalFutureValue - totalInvested;
 
-            // Вивід результатів
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("\n=========================================================");
             Console.WriteLine(isUa ? "                      РЕЗУЛЬТАТИ                         " : "                        RESULTS                          ");
@@ -48,36 +39,34 @@ namespace SmartDividendTracker.Services
             Console.ResetColor();
 
             Console.WriteLine(isUa ? $"Всього інвестовано власного капіталу: ${totalInvested:F2}" : $"Total Own Capital Invested: ${totalInvested:F2}");
-
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine(isUa ? $"Зароблено складним відсотком:         ${totalInterest:F2}" : $"Interest Earned (Compound):           ${totalInterest:F2}");
-
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine(isUa ? $"МАЙБУТНЯ ВАРТІСТЬ ПОРТФЕЛЯ:           ${totalFutureValue:F2}" : $"TOTAL FUTURE VALUE:                   ${totalFutureValue:F2}");
             Console.ResetColor();
 
             Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.WriteLine(isUa ? "\nНатисніть будь-яку клавішу для повернення..." : "\nPress any key to return...");
+            Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
             Console.ReadKey(true);
             Console.ResetColor();
         }
 
-        // Універсальний метод для зчитування чисел із захистом від помилок
-        private static decimal GetInput(string prompt, bool isUa)
+        private static decimal GetInput(string prompt)
         {
-            decimal value;
             while (true)
             {
                 Console.Write(prompt);
-                string input = Console.ReadLine()?.Replace(".", ",");
+                // Замінюємо кому на крапку для уніфікації введення користувачем
+                string input = Console.ReadLine()?.Replace(",", ".") ?? "";
 
-                if (decimal.TryParse(input, out value) && value >= 0)
+                // Парсимо інваріантно (завжди очікує крапку як роздільник)
+                if (decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal value) && value >= 0)
                 {
                     return value;
                 }
 
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(isUa ? "Невірний ввід. Будь ласка, введіть додатнє число." : "Invalid input. Please enter a positive number.");
+                Console.WriteLine(LocalizationManager.Get("InvalidInput"));
                 Console.ResetColor();
             }
         }

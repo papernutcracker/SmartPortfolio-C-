@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using SmartDividendTracker.Models;
 using SmartDividendTracker.Services;
 
@@ -15,16 +16,17 @@ namespace SmartDividendTracker
             var onboarding = new OnboardingService();
             UserProfile currentUser = onboarding.RunOrLoadProfile();
 
+            // Синхронізуємо мову профілю з менеджером локалізації
+            LocalizationManager.SetLanguage(currentUser.Language == "UA" ? "uk" : "en");
+
             if (currentUser.Experience == ExperienceLevel.Beginner && !currentUser.HasCompletedTutorial)
             {
                 TutorialService.RunTutorial(currentUser);
-
                 currentUser.HasCompletedTutorial = true;
                 onboarding.SaveProfile(currentUser);
             }
 
             var portfolioManager = new PortfolioManager();
-
             ShowMainMenu(currentUser, portfolioManager, onboarding);
         }
 
@@ -34,109 +36,85 @@ namespace SmartDividendTracker
 
             while (true)
             {
-                bool isUa = profile.Language.ToString() == "UA" || profile.Language.ToString() == "Ukrainian";
+
+                LocalizationManager.SetLanguage(profile.Language == "UA" ? "uk" : "en");
 
                 var localizedGoalsList = new List<string>();
                 foreach (var goal in profile.Goals)
                 {
                     localizedGoalsList.Add(goal switch
                     {
-                        InvestmentGoal.PassiveIncome => isUa ? "Пасивний дохід" : "Passive Income",
-                        InvestmentGoal.CapitalGrowth => isUa ? "Зростання капіталу" : "Capital Growth",
-                        InvestmentGoal.MajorPurchase => isUa ? "Велика покупка" : "Major Purchase",
+                        InvestmentGoal.PassiveIncome => LocalizationManager.Get("GoalPassive"),
+                        InvestmentGoal.CapitalGrowth => LocalizationManager.Get("GoalGrowth"),
+                        InvestmentGoal.MajorPurchase => LocalizationManager.Get("GoalPurchase"),
                         _ => goal.ToString()
                     });
                 }
                 string goalsText = string.Join(", ", localizedGoalsList);
 
+                // Локалізація горизонту
                 string localizedHorizon = profile.Horizon switch
                 {
-                    InvestmentHorizon.UpTo5Years => isUa ? "До 5 років" : "Up to 5 years",
-                    InvestmentHorizon.UpTo10Years => isUa ? "До 10 років" : "Up to 10 years",
-                    InvestmentHorizon.LongTerm => isUa ? "Більше 10 років" : "10+ years",
+                    InvestmentHorizon.UpTo5Years => LocalizationManager.Get("Horiz5"),
+                    InvestmentHorizon.UpTo10Years => LocalizationManager.Get("Horiz10"),
+                    InvestmentHorizon.LongTerm => LocalizationManager.Get("HorizMore"),
                     _ => profile.Horizon.ToString()
                 };
 
-                string expText = isUa ? (profile.Experience == ExperienceLevel.Beginner ? "Новачок" : "Досвідчений") : profile.Experience.ToString();
+                // Локалізація рівня досвіду
+                string expText = profile.Experience == ExperienceLevel.Beginner
+                    ? LocalizationManager.Get("ExpBeginner")
+                    : LocalizationManager.Get("ExpPro");
 
-                string header = (isUa ? "--- ГОЛОВНЕ МЕНЮ ---\n" : "--- MAIN MENU ---\n") +
-                                $"[{(isUa ? "Цілі" : "Goals")}: {goalsText} | {(isUa ? "Горизонт" : "Horizon")}: {localizedHorizon} | {(isUa ? "Досвід" : "Level")}: {expText}]";
+                string header = $"--- {LocalizationManager.Get("MainMenu")} ---\n" +
+                                $"[{LocalizationManager.Get("GoalPrompt")}: {goalsText} | {LocalizationManager.Get("HorizonPrompt")}: {localizedHorizon} | {LocalizationManager.Get("ExpLevel")}: {expText}]";
 
-                var menuOptions = isUa ? new List<string>
+                var menuOptions = new List<string>
                 {
-                    "Перегляд портфеля",
-                    "Шпаргалка для новачка",
-                    "Навчальний центр",
-                    "Складний відсоток",
-                    "Налаштування профілю",
-                    "Вихід"
-                } : new List<string>
-                {
-                    "View Portfolio",
-                    "Beginner's Cheat Sheet",
-                    "Educational Hub",
-                    "Compound Calculator",
-                    "Profile Settings",
-                    "Exit"
+                    LocalizationManager.Get("MenuOpt1"),    // View Portfolio
+                    LocalizationManager.Get("CheatSheetOpt"),// Beginner's Cheat Sheet
+                    LocalizationManager.Get("EduMenuTitle"),  // Educational Hub
+                    LocalizationManager.Get("MenuOpt5"),    // Compound Calculator
+                    LocalizationManager.Get("MenuOptGoalCalc"), // НАШ НОВИЙ КАЛЬКУЛЯТОР ЦІЛІ
+                    LocalizationManager.Get("MenuOpt4"),    // Profile Settings
+                    LocalizationManager.Get("MenuOpt3")     // Exit
                 };
 
                 int choice = ConsoleHelper.SelectOption(header, menuOptions, lastMainChoice);
                 lastMainChoice = choice;
 
-                // Використовуємо індекси замість текстових порівнянь
-                if (choice == 0)
+                // Перерозподіл індексів обробки кліків
+                if (choice == 0) ShowPortfolioMenu(portfolioManager);
+                else if (choice == 1) CheatSheetService.Show(profile.Language == "UA");
+                else if (choice == 2) TutorialService.ShowMenu(profile);
+                else if (choice == 3) CompoundCalculatorService.RunCalculator(profile.Language == "UA");
+                else if (choice == 4) GoalCalculatorService.Run(profile.Language == "UA"); // Запуск нового калькулятора
+                else if (choice == 5) onboarding.OpenSettings(profile);
+                else if (choice == 6)
                 {
-                    ShowPortfolioMenu(portfolioManager, isUa);
-                }
-                else if (choice == 1)
-                {
-                    CheatSheetService.Show(isUa);
-                }
-                else if (choice == 2)
-                {
-                    TutorialService.ShowMenu(profile);
-                }
-                else if (choice == 3)
-                {
-                    CompoundCalculatorService.RunCalculator(isUa);
-                }
-                else if (choice == 4)
-                {
-                    onboarding.OpenSettings(profile);
-                }
-                else if (choice == 5)
-                {
-                    ConsoleHelper.ShowExitAnimation(isUa ? "Дякуємо за використання Smart Dividend Portfolio Tracker!" : "Thank you for using Smart Dividend Portfolio Tracker!");
+                    ConsoleHelper.ShowExitAnimation(LocalizationManager.Get("ExitMessage"));
                     break;
                 }
             }
         }
 
-        static void ShowPortfolioMenu(PortfolioManager portfolioManager, bool isUa)
+        static void ShowPortfolioMenu(PortfolioManager portfolioManager)
         {
             int lastChoice = 0;
 
             while (true)
             {
                 decimal totalValue = portfolioManager.GetTotalPortfolioValue();
+                string header = $"--- {LocalizationManager.Get("PortfolioMenu")} ---\n" +
+                                $"[{LocalizationManager.Get("TotalValue")}: ${totalValue:F2}]";
 
-                string header = (isUa ? "--- МЕНЮ ПОРТФЕЛЯ ---\n" : "--- PORTFOLIO MENU ---\n") +
-                                $"[{(isUa ? "Загальна вартість" : "Total Value")}: ${totalValue:F2}]";
-
-                var options = isUa ? new List<string>
+                var options = new List<string>
                 {
-                    "Переглянути активи",
-                    "Додати акцію",
-                    "Видалити акцію",
-                    "Очистити портфель",
-                    "Повернутися назад"
-                } : new List<string>
-                {
-                    "View Assets",
-                    "Add Stock",
-                    "Remove Stock",
-                    "Clear Portfolio",
-                    "Back"
+                    LocalizationManager.Get("ViewAssets"),
+                    LocalizationManager.Get("AddStock"),
+                    LocalizationManager.Get("RemoveStock"),
+                    LocalizationManager.Get("ClearPortfolio"),
+                    LocalizationManager.Get("Back")
                 };
 
                 int choice = ConsoleHelper.SelectOption(header, options, lastChoice);
@@ -147,7 +125,7 @@ namespace SmartDividendTracker
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine("=========================================================================================");
-                    Console.WriteLine(isUa ? "  ПЕРЕГЛЯД АКТИВІВ" : "  VIEW ASSETS");
+                    Console.WriteLine($"  {LocalizationManager.Get("ViewAssets").ToUpper()}");
                     Console.WriteLine("=========================================================================================\n");
                     Console.ResetColor();
 
@@ -156,14 +134,14 @@ namespace SmartDividendTracker
                     if (stocks.Count == 0)
                     {
                         Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine(isUa ? "Ваш портфель наразі порожній." : "Your portfolio is currently empty.");
+                        Console.WriteLine(LocalizationManager.Get("EmptyPort"));
                         Console.ResetColor();
                     }
                     else
                     {
                         Console.BackgroundColor = ConsoleColor.DarkGray;
                         Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine($"| {"Ticker",-6} | {"Sector",-22} | {"Price",8} | {"Shs",5} | {"Value",12} | {"Yield",7} | {"AnnualDiv",10} |");
+                        Console.WriteLine($"| {LocalizationManager.Get("TblTicker"),-6} | {LocalizationManager.Get("TblSector"),-22} | {LocalizationManager.Get("TblPrice"),8} | {LocalizationManager.Get("TblShares"),5} | {LocalizationManager.Get("TblValue"),12} | {LocalizationManager.Get("TblYield"),7} | {LocalizationManager.Get("TblAnnualDiv"),10} |");
                         Console.ResetColor();
                         Console.WriteLine(new string('-', 89));
 
@@ -178,12 +156,12 @@ namespace SmartDividendTracker
                         decimal avgYield = totalValue > 0 ? (totalIncome / totalValue) * 100m : 0m;
 
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine(isUa ? $"\nЗагальна вартість портфеля: ${totalValue:F2}" : $"\nTotal Portfolio Value: ${totalValue:F2}");
-                        Console.WriteLine(isUa ? $"Очікуваний річний дохід: ${totalIncome:F2} (Сер. дохідність: {avgYield:F2}%)" : $"Estimated Annual Income: ${totalIncome:F2} (Avg Yield: {avgYield:F2}%)");
+                        Console.WriteLine($"\n{LocalizationManager.Get("TotalValue")}: ${totalValue:F2}");
+                        Console.WriteLine($"{LocalizationManager.Get("TotalIncome")} ${totalIncome:F2} ({LocalizationManager.Get("TblYield")}: {avgYield:F2}%)");
                         Console.ResetColor();
                     }
 
-                    Console.WriteLine(isUa ? "\nНатисніть будь-яку клавішу для повернення..." : "\nPress any key to return...");
+                    Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
                     Console.ReadKey(true);
                 }
                 else if (choice == 1) // Add Stock
@@ -191,86 +169,34 @@ namespace SmartDividendTracker
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine("=======================================");
-                    Console.WriteLine(isUa ? "  ДОДАВАННЯ АКЦІЇ" : "  ADD NEW STOCK");
+                    Console.WriteLine($"  {LocalizationManager.Get("AddStock").ToUpper()}");
                     Console.WriteLine("=======================================\n");
                     Console.ResetColor();
 
-                    Console.Write(isUa ? "Введіть тікер (наприклад, AAPL): " : "Enter Ticker symbol (e.g., AAPL): ");
-                    string ticker = Console.ReadLine()?.Trim().ToUpper() ?? "";
-                    if (string.IsNullOrEmpty(ticker)) ticker = "UNKNOWN";
+                    Console.Write(LocalizationManager.Get("EnterTicker"));
+                    string ticker = Console.ReadLine()?.Trim().ToUpper() ?? "UNKNOWN";
 
-                    var sectors = isUa ? new List<string> {
-                        "Технології", "Фінанси", "Охорона здоров'я", "Товари першої необхідності",
-                        "Споживчі товари", "Енергетика", "Комунальні послуги", "Нерухомість", "Промисловість", "Матеріали"
-                    } : new List<string> {
+                    var sectors = new List<string> {
                         "Technology", "Financials", "Healthcare", "Consumer Staples",
                         "Consumer Discretionary", "Energy", "Utilities", "Real Estate", "Industrials", "Materials"
                     };
 
-                    int sectorChoice = ConsoleHelper.SelectOption(isUa ? "Оберіть сектор компанії:" : "Select the company's sector:", sectors);
+                    int sectorChoice = ConsoleHelper.SelectOption(LocalizationManager.Get("SelectSector"), sectors);
                     string sector = sectors[sectorChoice];
 
-                    Console.Clear();
-                    Console.ForegroundColor = ConsoleColor.Cyan;
-                    Console.WriteLine(isUa ? $"--- Додавання: {ticker} ({sector}) ---\n" : $"--- Adding: {ticker} ({sector}) ---\n");
-                    Console.ResetColor();
-
-                    decimal price = 0;
-                    while (true)
-                    {
-                        Console.Write(isUa ? "Введіть середню ціну акції: " : "Enter Average Price per share: ");
-                        string input = Console.ReadLine()?.Replace(".", ",") ?? "";
-                        if (decimal.TryParse(input, out price) && price >= 0) break;
-
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(isUa ? "Невірний ввід. Введіть додатнє число." : "Invalid input. Please enter a positive number.");
-                        Console.ResetColor();
-                    }
-
-                    int shares = 0;
-                    while (true)
-                    {
-                        Console.Write(isUa ? "Введіть кількість акцій: " : "Enter number of shares: ");
-                        string input = Console.ReadLine() ?? "";
-                        if (int.TryParse(input, out shares) && shares > 0) break;
-
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(isUa ? "Невірний ввід. Введіть ціле додатнє число." : "Invalid input. Please enter a positive whole number.");
-                        Console.ResetColor();
-                    }
-
-                    decimal divYield = 0;
-                    while (true)
-                    {
-                        Console.Write(isUa ? "Введіть дивідендну дохідність % (наприклад, 4,5): " : "Enter Dividend Yield percentage (e.g., 4.5): ");
-                        string input = Console.ReadLine()?.Replace(".", ",") ?? "";
-                        if (decimal.TryParse(input, out divYield) && divYield >= 0) break;
-
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(isUa ? "Невірний ввід." : "Invalid input.");
-                        Console.ResetColor();
-                    }
-
-                    decimal peRatio = 0;
-                    while (true)
-                    {
-                        Console.Write(isUa ? "Введіть P/E Ratio: " : "Enter P/E Ratio: ");
-                        string input = Console.ReadLine()?.Replace(".", ",") ?? "";
-                        if (decimal.TryParse(input, out peRatio) && peRatio >= 0) break;
-
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine(isUa ? "Невірний ввід." : "Invalid input.");
-                        Console.ResetColor();
-                    }
+                    decimal price = ReadDecimalInput(LocalizationManager.Get("EnterPrice"));
+                    int shares = ReadIntInput(LocalizationManager.Get("EnterShares"));
+                    decimal divYield = ReadDecimalInput(LocalizationManager.Get("EnterYield"));
+                    decimal peRatio = ReadDecimalInput(LocalizationManager.Get("EnterPE"));
 
                     var newStock = new DividendStock(ticker, sector, price, shares, divYield, peRatio);
                     portfolioManager.AddStock(newStock);
 
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine(isUa ? $"\nУспішно додано {shares} акцій {ticker} до портфеля." : $"\nSuccessfully added {shares} shares of {ticker} to your portfolio.");
+                    Console.WriteLine($"\n{LocalizationManager.Get("StockAdded")}");
                     Console.ResetColor();
 
-                    Console.WriteLine(isUa ? "\nНатисніть будь-яку клавішу для повернення..." : "\nPress any key to return...");
+                    Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
                     Console.ReadKey(true);
                 }
                 else if (choice == 2) // Remove Stock
@@ -281,9 +207,8 @@ namespace SmartDividendTracker
                     {
                         Console.Clear();
                         Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine(isUa ? "\nВаш портфель порожній. Нічого видаляти." : "\nYour portfolio is empty. Nothing to remove.");
+                        Console.WriteLine($"\n{LocalizationManager.Get("EmptyPort")}");
                         Console.ResetColor();
-                        Console.WriteLine(isUa ? "\nНатисніть будь-яку клавішу для повернення..." : "\nPress any key to return...");
                         Console.ReadKey(true);
                     }
                     else
@@ -293,10 +218,9 @@ namespace SmartDividendTracker
                         {
                             removeOptions.Add($"{stock.Ticker,-6} | {stock.Sector} | {stock.Shares} - ${stock.TotalValue:F2}");
                         }
+                        removeOptions.Add($"[ {LocalizationManager.Get("Cancel")} ]");
 
-                        removeOptions.Add(isUa ? "[ Скасувати ]" : "[ Cancel ]");
-
-                        int removeChoice = ConsoleHelper.SelectOption(isUa ? "Оберіть акцію для видалення:" : "Select a stock to remove:", removeOptions);
+                        int removeChoice = ConsoleHelper.SelectOption(LocalizationManager.Get("SelectToRemove"), removeOptions);
 
                         if (removeChoice < stocks.Count)
                         {
@@ -305,9 +229,8 @@ namespace SmartDividendTracker
 
                             Console.Clear();
                             Console.ForegroundColor = ConsoleColor.Green;
-                            Console.WriteLine(isUa ? $"\nУспішно видалено {tickerToRemove} з портфеля." : $"\nSuccessfully removed {tickerToRemove} from your portfolio.");
+                            Console.WriteLine($"\n{LocalizationManager.Get("StockRemoved")}");
                             Console.ResetColor();
-                            Console.WriteLine(isUa ? "\nНатисніть будь-яку клавішу для повернення..." : "\nPress any key to return...");
                             Console.ReadKey(true);
                         }
                     }
@@ -316,34 +239,54 @@ namespace SmartDividendTracker
                 {
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("=======================================");
-                    Console.WriteLine(isUa ? "  ОЧИСТИТИ ПОРТФЕЛЬ" : "  CLEAR PORTFOLIO");
-                    Console.WriteLine("=======================================\n");
+                    Console.WriteLine($"\n{LocalizationManager.Get("ClearConfirm")}");
                     Console.ResetColor();
-
-                    Console.Write(isUa ? "Ви впевнені, що хочете видалити всі активи? Введіть 'ТАК' для підтвердження: " : "Are you sure you want to delete all assets? Type 'YES' to confirm: ");
                     string confirmation = Console.ReadLine()?.Trim().ToUpper() ?? "";
 
                     if (confirmation == "YES" || confirmation == "ТАК")
                     {
                         portfolioManager.ClearAll();
-
                         Console.ForegroundColor = ConsoleColor.Green;
-                        Console.WriteLine(isUa ? "\nПортфель успішно очищено." : "\nPortfolio has been successfully cleared.");
+                        Console.WriteLine($"\n{LocalizationManager.Get("PortfolioCleared")}");
                         Console.ResetColor();
                     }
-                    else
-                    {
-                        Console.WriteLine(isUa ? "\n[Дію скасовано]" : "\n[Action canceled]");
-                    }
-
-                    Console.WriteLine(isUa ? "\nНатисніть будь-яку клавішу для повернення..." : "\nPress any key to return...");
                     Console.ReadKey(true);
                 }
                 else if (choice == 4) // Back
                 {
                     break;
                 }
+            }
+        }
+
+        // Культуро-незалежні хелпери для введення даних
+        private static decimal ReadDecimalInput(string prompt)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine()?.Replace(",", ".") ?? "";
+                if (decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal value) && value >= 0)
+                    return value;
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(LocalizationManager.Get("InvalidInput"));
+                Console.ResetColor();
+            }
+        }
+
+        private static int ReadIntInput(string prompt)
+        {
+            while (true)
+            {
+                Console.Write(prompt);
+                string input = Console.ReadLine() ?? "";
+                if (int.TryParse(input, out int value) && value > 0)
+                    return value;
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(LocalizationManager.Get("InvalidInput"));
+                Console.ResetColor();
             }
         }
     }

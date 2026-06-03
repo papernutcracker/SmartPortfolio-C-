@@ -93,7 +93,7 @@ namespace SmartDividendTracker.Services
             { "EnterEndDate", ("Enter target date (dd.MM.yyyy, default +10 years): ", "Введіть кінцеву дату (дд.ММ.рррр, за замовчуванням +10 років): ") },
             { "InvalidDate", ("Invalid format or date in the past. Use dd.MM.yyyy", "Некоректна дата або дата в минулому. Використовуйте дд.ММ.рррр") },
             { "MenuOpt5", ("Compound Calculator", "Калькулятор капіталу") },
-            { "EduMenuTitle", ("EDUCATION HUB", "НАВЧАЛЬНИЙ ЦЕНТР") },
+            { "EduMenuTitle", ("Education hub", "Навчальний центр") },
             { "CheatSheetOpt", ("Beginner's Cheat Sheet", "Шпаргалка термінів") },
             { "CalcOpt", ("Compound Interest Calculator", "Калькулятор складного відсотка") },
             { "TutWelcome", ("Welcome, future investor! Let's start your financial journey.", "Вітаємо, майбутній інвесторе! Почнемо вашу фінансову подорож.") },
@@ -103,7 +103,8 @@ namespace SmartDividendTracker.Services
             { "PressEnter", ("Press ENTER to continue...", "Натисніть ENTER для продовження...") },
             { "ClearPortfolio", ("Clear Entire Portfolio", "Очистити весь портфель") },
             { "ClearConfirm", ("Are you sure? Type YES to confirm: ", "Ви впевнені? Введіть YES для підтвердження: ") },
-            { "PortfolioCleared", ("Portfolio has been completely cleared!", "Портфель повністю очищено!") }
+            { "PortfolioCleared", ("Portfolio has been completely cleared!", "Портфель повністю очищено!") },
+            { "MenuOptGoalCalc", ("Goal Milestone Calculator", "Калькулятор фінансової цілі") }
         };
 
         public static string Get(string key)
