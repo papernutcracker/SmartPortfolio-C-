@@ -16,7 +16,7 @@ namespace SmartDividendTracker
             var onboarding = new OnboardingService();
             UserProfile currentUser = onboarding.RunOrLoadProfile();
 
-            // Синхронізуємо мову профілю з менеджером локалізації
+            // Початкова синхронізація локалізації
             LocalizationManager.SetLanguage(currentUser.Language == "UA" ? "uk" : "en");
 
             if (currentUser.Experience == ExperienceLevel.Beginner && !currentUser.HasCompletedTutorial)
@@ -36,9 +36,11 @@ namespace SmartDividendTracker
 
             while (true)
             {
-
+                // ФІКС: Оновлюємо мову в менеджері на кожній ітерації головного меню
                 LocalizationManager.SetLanguage(profile.Language == "UA" ? "uk" : "en");
+                bool isUa = LocalizationManager.GetCurrentLanguage() == "uk";
 
+                // Локалізація цілей через менеджер
                 var localizedGoalsList = new List<string>();
                 foreach (var goal in profile.Goals)
                 {
@@ -69,26 +71,26 @@ namespace SmartDividendTracker
                 string header = $"--- {LocalizationManager.Get("MainMenu")} ---\n" +
                                 $"[{LocalizationManager.Get("GoalPrompt")}: {goalsText} | {LocalizationManager.Get("HorizonPrompt")}: {localizedHorizon} | {LocalizationManager.Get("ExpLevel")}: {expText}]";
 
+                // Оновлений список опцій з урахуванням калькулятора цілі
                 var menuOptions = new List<string>
                 {
-                    LocalizationManager.Get("MenuOpt1"),    // View Portfolio
-                    LocalizationManager.Get("CheatSheetOpt"),// Beginner's Cheat Sheet
-                    LocalizationManager.Get("EduMenuTitle"),  // Educational Hub
-                    LocalizationManager.Get("MenuOpt5"),    // Compound Calculator
-                    LocalizationManager.Get("MenuOptGoalCalc"), // НАШ НОВИЙ КАЛЬКУЛЯТОР ЦІЛІ
-                    LocalizationManager.Get("MenuOpt4"),    // Profile Settings
-                    LocalizationManager.Get("MenuOpt3")     // Exit
+                    LocalizationManager.Get("MenuOpt1"),      // View Portfolio
+                    LocalizationManager.Get("CheatSheetOpt"),  // Beginner's Cheat Sheet
+                    LocalizationManager.Get("EduMenuTitle"),    // Educational Hub
+                    LocalizationManager.Get("MenuOpt5"),      // Compound Calculator
+                    LocalizationManager.Get("MenuOptGoalCalc"),// Goal Calculator
+                    LocalizationManager.Get("MenuOpt4"),      // Profile Settings
+                    LocalizationManager.Get("MenuOpt3")       // Exit
                 };
 
                 int choice = ConsoleHelper.SelectOption(header, menuOptions, lastMainChoice);
                 lastMainChoice = choice;
 
-                // Перерозподіл індексів обробки кліків
                 if (choice == 0) ShowPortfolioMenu(portfolioManager);
-                else if (choice == 1) CheatSheetService.Show(profile.Language == "UA");
+                else if (choice == 1) CheatSheetService.Show(isUa);
                 else if (choice == 2) TutorialService.ShowMenu(profile);
-                else if (choice == 3) CompoundCalculatorService.RunCalculator(profile.Language == "UA");
-                else if (choice == 4) GoalCalculatorService.Run(profile.Language == "UA"); // Запуск нового калькулятора
+                else if (choice == 3) CompoundCalculatorService.RunCalculator(isUa);
+                else if (choice == 4) GoalCalculatorService.Run(isUa); // Новий калькулятор
                 else if (choice == 5) onboarding.OpenSettings(profile);
                 else if (choice == 6)
                 {
@@ -104,15 +106,18 @@ namespace SmartDividendTracker
 
             while (true)
             {
+                bool isUa = LocalizationManager.GetCurrentLanguage() == "uk";
                 decimal totalValue = portfolioManager.GetTotalPortfolioValue();
                 string header = $"--- {LocalizationManager.Get("PortfolioMenu")} ---\n" +
                                 $"[{LocalizationManager.Get("TotalValue")}: ${totalValue:F2}]";
 
+                // Оновлене меню портфеля з ASCII-діаграмою часток секторів
                 var options = new List<string>
                 {
                     LocalizationManager.Get("ViewAssets"),
                     LocalizationManager.Get("AddStock"),
                     LocalizationManager.Get("RemoveStock"),
+                    isUa ? "Переглянути діаграму часток" : "View Sector Chart",
                     LocalizationManager.Get("ClearPortfolio"),
                     LocalizationManager.Get("Back")
                 };
@@ -148,7 +153,28 @@ namespace SmartDividendTracker
                         foreach (var stock in stocks)
                         {
                             decimal annualDiv = stock.CalculateAnnualDividend();
-                            Console.WriteLine($"| {stock.Ticker,-6} | {stock.Sector,-22} | {stock.AveragePrice,8:F2} | {stock.Shares,5} | {stock.TotalValue,12:F2} | {stock.DividendYield,6:F2}% | {annualDiv,10:F2} |");
+
+                            // Перекладаємо системну англійську назву сектора на льоту для таблиці
+                            string displaySector = stock.Sector;
+                            if (isUa)
+                            {
+                                displaySector = stock.Sector switch
+                                {
+                                    "Technology" => LocalizationManager.Get("SecTech"),
+                                    "Financials" => LocalizationManager.Get("SecFinance"),
+                                    "Healthcare" => LocalizationManager.Get("SecHealth"),
+                                    "Consumer Staples" => "Товари першої необх.",
+                                    "Consumer Discretionary" => LocalizationManager.Get("SecDiscretionary"),
+                                    "Energy" => LocalizationManager.Get("SecEnergy"),
+                                    "Utilities" => "Комун. послуги",
+                                    "Real Estate" => LocalizationManager.Get("SecRealEstate"),
+                                    "Industrials" => LocalizationManager.Get("SecIndustrials"),
+                                    "Materials" => LocalizationManager.Get("SecMaterials"),
+                                    _ => stock.Sector
+                                };
+                            }
+
+                            Console.WriteLine($"| {stock.Ticker,-6} | {displaySector,-22} | {stock.AveragePrice,8:F2} | {stock.Shares,5} | {stock.TotalValue,12:F2} | {stock.DividendYield,6:F2}% | {annualDiv,10:F2} |");
                         }
                         Console.WriteLine(new string('-', 89));
 
@@ -176,13 +202,28 @@ namespace SmartDividendTracker
                     Console.Write(LocalizationManager.Get("EnterTicker"));
                     string ticker = Console.ReadLine()?.Trim().ToUpper() ?? "UNKNOWN";
 
-                    var sectors = new List<string> {
+                    // Системні незмінні англійські ключі для зберігання в базі
+                    var systemSectors = new List<string> {
                         "Technology", "Financials", "Healthcare", "Consumer Staples",
                         "Consumer Discretionary", "Energy", "Utilities", "Real Estate", "Industrials", "Materials"
                     };
 
-                    int sectorChoice = ConsoleHelper.SelectOption(LocalizationManager.Get("SelectSector"), sectors);
-                    string sector = sectors[sectorChoice];
+                    // Локалізовані назви для зручного вибору користувачем
+                    var localizedSectors = new List<string> {
+                        LocalizationManager.Get("SecTech"),
+                        LocalizationManager.Get("SecFinance"),
+                        LocalizationManager.Get("SecHealth"),
+                        LocalizationManager.Get("SecStaples"),
+                        LocalizationManager.Get("SecDiscretionary"),
+                        LocalizationManager.Get("SecEnergy"),
+                        LocalizationManager.Get("SecUtilities"),
+                        LocalizationManager.Get("SecRealEstate"),
+                        LocalizationManager.Get("SecIndustrials"),
+                        LocalizationManager.Get("SecMaterials")
+                    };
+
+                    int sectorChoice = ConsoleHelper.SelectOption(LocalizationManager.Get("SelectSector"), localizedSectors);
+                    string sector = systemSectors[sectorChoice]; // Зберігаємо системну версію
 
                     decimal price = ReadDecimalInput(LocalizationManager.Get("EnterPrice"));
                     int shares = ReadIntInput(LocalizationManager.Get("EnterShares"));
@@ -235,7 +276,14 @@ namespace SmartDividendTracker
                         }
                     }
                 }
-                else if (choice == 3) // Clear Portfolio
+                else if (choice == 3) // Побудова діаграми диверсифікації
+                {
+                    portfolioManager.PrintSectorDiversification(isUa);
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
+                    Console.ReadKey(true);
+                }
+                else if (choice == 4) // Clear Portfolio
                 {
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -245,22 +293,19 @@ namespace SmartDividendTracker
                     Console.ResetColor();
 
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    Console.Write(LocalizationManager.Get("ClearConfirm"));
+                    Console.Write(LocalizationManager.Get("ClearConfirm")); // Залежно від мови просить ТАК або YES
                     Console.ResetColor();
-
                     string confirmation = Console.ReadLine()?.Trim().ToUpper() ?? "";
 
                     if (confirmation == "YES" || confirmation == "ТАК")
                     {
                         portfolioManager.ClearAll();
-
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine($"\n{LocalizationManager.Get("PortfolioCleared")}");
                         Console.ResetColor();
                     }
                     else
                     {
-                        // Яскравий заспокійливий варнінг, якщо користувач передумав або помилився
                         Console.ForegroundColor = ConsoleColor.Yellow;
                         Console.WriteLine($"\n⚠️ {LocalizationManager.Get("ClearCanceled")}");
                         Console.ResetColor();
@@ -268,17 +313,16 @@ namespace SmartDividendTracker
 
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
-                    Console.ResetColor();
                     Console.ReadKey(true);
                 }
-                else if (choice == 4) // Back
+                else if (choice == 5) // Back
                 {
                     break;
                 }
             }
         }
 
-        // Культуро-незалежні хелпери для введення даних
+        // Безпечні культуро-незалежні хелпери парсингу чисел розробника
         private static decimal ReadDecimalInput(string prompt)
         {
             while (true)

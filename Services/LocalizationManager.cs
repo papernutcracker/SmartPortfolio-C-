@@ -104,9 +104,18 @@ namespace SmartDividendTracker.Services
             { "ClearPortfolio", ("Clear Entire Portfolio", "Очистити весь портфель") },
             { "PortfolioCleared", ("Portfolio has been completely cleared!", "Портфель повністю очищено!") },
             { "MenuOptGoalCalc", ("Goal Milestone Calculator", "Калькулятор фінансової цілі") },
-{ "ClearConfirm", ("Are you sure? Type YES to confirm: ", "Ви впевнені? Введіть ТАК для підтвердження: ") },
-
-{ "ClearCanceled", ("Action canceled. Your portfolio remains completely safe.", "Дію скасовано. Твій портфель залишається в повній безпеці.") }
+            { "ClearConfirm", ("Are you sure? Type YES to confirm: ", "Ви впевнені? Введіть ТАК для підтвердження: ") },
+            { "ClearCanceled", ("Action canceled. Your portfolio remains completely safe.", "Дію скасовано. Твій портфель залишається в повній безпеці.") },
+            { "SecTech", ("Technology", "Технології") },
+            { "SecFinance", ("Financials", "Фінанси") },
+            { "SecHealth", ("Healthcare", "Охорона здоров'я") },
+            { "SecStaples", ("Consumer Staples", "Товари першої необхідності") },
+            { "SecDiscretionary", ("Consumer Discretionary", "Споживчі товари") },
+            { "SecEnergy", ("Energy", "Енергетика") },
+            { "SecUtilities", ("Utilities", "Комунальні послуги") },
+            { "SecRealEstate", ("Real Estate", "Нерухомість") },
+            { "SecIndustrials", ("Industrials", "Промисловість") },
+            { "SecMaterials", ("Materials", "Матеріали") }
         };
 
         public static string Get(string key)

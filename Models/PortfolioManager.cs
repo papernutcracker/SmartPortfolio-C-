@@ -1,64 +1,165 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
+using System.Text.Json;
+using SmartDividendTracker.Models;
 
-namespace SmartDividendTracker.Models
+namespace SmartDividendTracker.Services
 {
     public class PortfolioManager
     {
-        // List where all added stocks are stored
-        private List<DividendStock> _stocks = new List<DividendStock>();
+        private readonly string _filePath = "portfolio.json";
+        private List<DividendStock> _stocks = new();
+
+        public PortfolioManager()
+        {
+            // Автоматично завантажуємо активи під час створення менеджера
+            LoadPortfolio();
+        }
+
+        public List<DividendStock> GetAllStocks() => _stocks;
 
         public void AddStock(DividendStock stock)
         {
-            _stocks.Add(stock);
+            // Якщо акція з таким тікером вже є — розумно усереднюємо позицію
+            var existing = _stocks.Find(s => s.Ticker.Equals(stock.Ticker, StringComparison.OrdinalIgnoreCase));
+            if (existing != null)
+            {
+                int totalShares = existing.Shares + stock.Shares;
+                existing.AveragePrice = ((existing.AveragePrice * existing.Shares) + (stock.AveragePrice * stock.Shares)) / totalShares;
+                existing.Shares = totalShares;
+                existing.DividendYield = stock.DividendYield; // Оновлюємо актуальну дохідність
+                existing.PeRatio = stock.PeRatio;
+            }
+            else
+            {
+                _stocks.Add(stock);
+            }
+
+            SavePortfolio();
         }
 
         public void RemoveStock(string ticker)
         {
-            // Find the stock by ticker, ignoring case (uppercase/lowercase)
-            var stockToRemove = _stocks.FirstOrDefault(s => s.Ticker.Equals(ticker, StringComparison.OrdinalIgnoreCase));
-
-            if (stockToRemove != null)
-            {
-                _stocks.Remove(stockToRemove);
-            }
+            _stocks.RemoveAll(s => s.Ticker.Equals(ticker, StringComparison.OrdinalIgnoreCase));
+            SavePortfolio();
         }
 
-        public IReadOnlyList<DividendStock> GetAllStocks()
+        public void ClearAll()
         {
-            return _stocks.AsReadOnly();
+            _stocks.Clear();
+            SavePortfolio();
         }
 
         public decimal GetTotalPortfolioValue()
         {
-            // Calculate the total value of the entire portfolio
-            return _stocks.Sum(s => s.TotalValue);
+            decimal total = 0;
+            foreach (var stock in _stocks) total += stock.TotalValue;
+            return total;
         }
 
         public decimal GetTotalAnnualIncome()
         {
-            // Calculate total annual dividend income
-            return _stocks.Sum(s => s.CalculateAnnualDividend());
+            decimal total = 0;
+            foreach (var stock in _stocks) total += stock.CalculateAnnualDividend();
+            return total;
         }
 
-        // The method to completely clear the portfolio
-        public void ClearAll()
+        // 🔥 НАША НОВА ФІЧА:ASCII-графіка часток секторів портфеля!
+        public void PrintSectorDiversification(bool isUa)
         {
-            _stocks.Clear();
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("=========================================================");
+            Console.WriteLine(isUa ? "              ДИВЕРСИФІКАЦІЯ ЗА СЕКТОРАМИ                " : "                SECTOR DIVERSIFICATION                   ");
+            Console.WriteLine("=========================================================\n");
+            Console.ResetColor();
+
+            decimal totalValue = GetTotalPortfolioValue();
+
+            if (totalValue == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(isUa ? "Ваш портфель порожній. Немає даних для діаграми." : "Portfolio is empty. No data for chart.");
+                Console.ResetColor();
+                return;
+            }
+
+            // Групуємо активи та сумуємо їхню вартість за секторами
+            var sectorGroups = new Dictionary<string, decimal>();
+            foreach (var stock in _stocks)
+            {
+                string sector = stock.Sector;
+                if (isUa)
+                {
+                    sector = sector switch
+                    {
+                        "Technology" => "Технології",
+                        "Financials" => "Фінанси",
+                        "Healthcare" => "Охорона здоров'я",
+                        "Consumer Staples" => "Товари першої необх.",
+                        "Consumer Discretionary" => "Споживчі товари",
+                        "Energy" => "Енергетика",
+                        "Utilities" => "Комун. послуги",
+                        "Real Estate" => "Нерухомість",
+                        "Industrials" => "Промисловість",
+                        "Materials" => "Матеріали",
+                        _ => sector
+                    };
+                }
+
+                if (sectorGroups.ContainsKey(sector))
+                    sectorGroups[sector] += stock.TotalValue;
+                else
+                    sectorGroups[sector] = stock.TotalValue;
+            }
+
+            // Малюємо гістограму на екрані
+            foreach (var group in sectorGroups)
+            {
+                decimal pct = (group.Value / totalValue) * 100;
+                int barLength = (int)(pct / 4); // 1 кубик "█" = 4% ширини екрана
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.Write($"{group.Key,-22}: ");
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write(new string('█', barLength));
+
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.Write(new string('░', 25 - barLength)); // Заповнюємо решту порожнечею
+
+                Console.ResetColor();
+                Console.WriteLine($" {pct:F1}% (${group.Value:F2})");
+            }
         }
 
-        // Method for calculating diversification (useful for future analytics)
-        public Dictionary<string, decimal> GetSectorAllocation()
+        private void SavePortfolio()
         {
-            var totalValue = GetTotalPortfolioValue();
-            if (totalValue == 0) return new Dictionary<string, decimal>();
+            try
+            {
+                var options = new JsonSerializerOptions { WriteIndented = true };
+                string json = JsonSerializer.Serialize(_stocks, options);
+                File.WriteAllText(_filePath, json);
+            }
+            catch (Exception) { /* Захист від збоїв запису */ }
+        }
 
-            return _stocks.GroupBy(s => s.Sector)
-                          .ToDictionary(
-                              g => g.Key,
-                              g => (g.Sum(s => s.TotalValue) / totalValue) * 100m
-                          );
+        private void LoadPortfolio()
+        {
+            if (File.Exists(_filePath))
+            {
+                try
+                {
+                    string json = File.ReadAllText(_filePath);
+                    var data = JsonSerializer.Deserialize<List<DividendStock>>(json);
+                    if (data != null) _stocks = data;
+                }
+                catch (Exception)
+                {
+                    _stocks = new List<DividendStock>();
+                }
+            }
         }
     }
 }
