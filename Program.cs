@@ -239,17 +239,36 @@ namespace SmartDividendTracker
                 {
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"\n{LocalizationManager.Get("ClearConfirm")}");
+                    Console.WriteLine("=======================================");
+                    Console.WriteLine($"  {LocalizationManager.Get("ClearPortfolio").ToUpper()}");
+                    Console.WriteLine("=======================================\n");
                     Console.ResetColor();
+
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.Write(LocalizationManager.Get("ClearConfirm"));
+                    Console.ResetColor();
+
                     string confirmation = Console.ReadLine()?.Trim().ToUpper() ?? "";
 
                     if (confirmation == "YES" || confirmation == "ТАК")
                     {
                         portfolioManager.ClearAll();
+
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine($"\n{LocalizationManager.Get("PortfolioCleared")}");
                         Console.ResetColor();
                     }
+                    else
+                    {
+                        // Яскравий заспокійливий варнінг, якщо користувач передумав або помилився
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine($"\n⚠️ {LocalizationManager.Get("ClearCanceled")}");
+                        Console.ResetColor();
+                    }
+
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
+                    Console.ResetColor();
                     Console.ReadKey(true);
                 }
                 else if (choice == 4) // Back

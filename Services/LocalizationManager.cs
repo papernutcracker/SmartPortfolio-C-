@@ -102,9 +102,11 @@ namespace SmartDividendTracker.Services
             { "TutReady", ("Awesome! You are ready. Let's go to the Main Menu.", "Чудово! Ви готові. Переходимо до Головного Меню.") },
             { "PressEnter", ("Press ENTER to continue...", "Натисніть ENTER для продовження...") },
             { "ClearPortfolio", ("Clear Entire Portfolio", "Очистити весь портфель") },
-            { "ClearConfirm", ("Are you sure? Type YES to confirm: ", "Ви впевнені? Введіть YES для підтвердження: ") },
             { "PortfolioCleared", ("Portfolio has been completely cleared!", "Портфель повністю очищено!") },
-            { "MenuOptGoalCalc", ("Goal Milestone Calculator", "Калькулятор фінансової цілі") }
+            { "MenuOptGoalCalc", ("Goal Milestone Calculator", "Калькулятор фінансової цілі") },
+{ "ClearConfirm", ("Are you sure? Type YES to confirm: ", "Ви впевнені? Введіть ТАК для підтвердження: ") },
+
+{ "ClearCanceled", ("Action canceled. Your portfolio remains completely safe.", "Дію скасовано. Твій портфель залишається в повній безпеці.") }
         };
 
         public static string Get(string key)
