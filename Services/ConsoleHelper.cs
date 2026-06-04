@@ -5,35 +5,48 @@ namespace SmartDividendTracker.Services
 {
     public static class ConsoleHelper
     {
+        // 🔥 ФІКС: Класову статичну змінну _selectedIndex ПОВНІСТЮ ВИДАЛЕНО,
+        // щоб виключити будь-яке перетікання індексів між різними меню!
+
+        // Головний метод інтерактивного меню з локальним станом
         public static int SelectOption(string prompt, List<string> options, int defaultIndex = 0)
         {
+            // Створюємо локальну змінну на стеку — вона живе лише поки працює це конкретне меню
             int selectedIndex = defaultIndex;
-            Console.CursorVisible = false;
 
-            while (true)
+            // Захист від некоректного дефолтного індексу
+            if (selectedIndex >= options.Count || selectedIndex < 0)
+            {
+                selectedIndex = 0;
+            }
+
+            ConsoleKey keyPressed;
+            do
             {
                 Console.Clear();
+
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine("=======================================");
+                Console.WriteLine("=========================================================");
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine(prompt);
-                Console.WriteLine("=======================================\n");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine("=========================================================");
                 Console.ResetColor();
 
                 for (int i = 0; i < options.Count; i++)
                 {
                     if (i == selectedIndex)
                     {
-                        Console.BackgroundColor = ConsoleColor.DarkCyan;
-                        Console.ForegroundColor = ConsoleColor.White;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.BackgroundColor = ConsoleColor.Cyan;
                         Console.WriteLine($" > {options[i]} ");
-                        Console.ResetColor();
                     }
                     else
                     {
                         Console.ForegroundColor = ConsoleColor.Gray;
                         Console.WriteLine($"   {options[i]} ");
-                        Console.ResetColor();
                     }
+                    Console.ResetColor();
                 }
 
                 while (Console.KeyAvailable)
@@ -41,105 +54,91 @@ namespace SmartDividendTracker.Services
                     Console.ReadKey(true);
                 }
 
-                var key = Console.ReadKey(true).Key;
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                keyPressed = keyInfo.Key;
 
-                if (key == ConsoleKey.UpArrow)
+                if (keyPressed == ConsoleKey.UpArrow)
                 {
                     selectedIndex--;
                     if (selectedIndex < 0) selectedIndex = options.Count - 1;
                 }
-                else if (key == ConsoleKey.DownArrow)
+                else if (keyPressed == ConsoleKey.DownArrow)
                 {
                     selectedIndex++;
                     if (selectedIndex >= options.Count) selectedIndex = 0;
                 }
-                else if (key == ConsoleKey.Enter)
-                {
-                    Console.CursorVisible = true;
-                    Console.Clear();
-                    System.Threading.Thread.Sleep(100);
-                    return selectedIndex;
-                }
-            }
+
+            } while (keyPressed != ConsoleKey.Enter);
+
+            Console.ResetColor();
+            return selectedIndex;
         }
 
         public static List<int> SelectMultipleOptions(string prompt, List<string> options)
         {
-            int selectedIndex = 0;
-            var checkedIndexes = new HashSet<int>();
-            Console.CursorVisible = false;
+            var selectedIndices = new List<int>();
+            int currentHover = 0;
+            ConsoleKey keyPressed;
 
-            while (true)
+            do
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine("=======================================");
+                Console.WriteLine("=========================================================");
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine(prompt);
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine(LocalizationManager.GetCurrentLanguage() == "uk"
-                    ? "(Стрілки - навігація, ПРОБІЛ - обрати, ENTER - підтвердити)"
-                    : "(Arrows to move, SPACE to check/uncheck, ENTER to confirm)");
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine("=======================================\n");
+                Console.WriteLine("=========================================================");
                 Console.ResetColor();
 
                 for (int i = 0; i < options.Count; i++)
                 {
-                    bool isChecked = checkedIndexes.Contains(i);
-                    string checkboxText = isChecked ? "[X]" : "[ ]";
+                    string checkbox = selectedIndices.Contains(i) ? "[X]" : "[ ]";
 
-                    if (i == selectedIndex)
+                    if (i == currentHover)
                     {
-                        Console.BackgroundColor = ConsoleColor.DarkCyan;
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.Write($" > {checkboxText} ");
-                        Console.WriteLine($"{options[i]} ");
-                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.BackgroundColor = ConsoleColor.Cyan;
+                        Console.WriteLine($" > {checkbox} {options[i]} ");
                     }
                     else
                     {
-                        Console.ForegroundColor = isChecked ? ConsoleColor.Green : ConsoleColor.Gray;
-                        Console.Write($"   {checkboxText} ");
                         Console.ForegroundColor = ConsoleColor.Gray;
-                        Console.WriteLine($"{options[i]} ");
-                        Console.ResetColor();
+                        Console.WriteLine($"   {checkbox} {options[i]} ");
                     }
+                    Console.ResetColor();
                 }
 
-                while (Console.KeyAvailable)
-                {
-                    Console.ReadKey(true);
-                }
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine("\n [Space] - Обрати/Зняти | [Enter] - Підтвердити вибір");
+                Console.ResetColor();
 
-                var key = Console.ReadKey(true).Key;
+                while (Console.KeyAvailable) Console.ReadKey(true); 
 
-                if (key == ConsoleKey.UpArrow)
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                keyPressed = keyInfo.Key;
+
+                if (keyPressed == ConsoleKey.UpArrow)
                 {
-                    selectedIndex--;
-                    if (selectedIndex < 0) selectedIndex = options.Count - 1;
+                    currentHover--;
+                    if (currentHover < 0) currentHover = options.Count - 1;
                 }
-                else if (key == ConsoleKey.DownArrow)
+                else if (keyPressed == ConsoleKey.DownArrow)
                 {
-                    selectedIndex++;
-                    if (selectedIndex >= options.Count) selectedIndex = 0;
+                    currentHover++;
+                    if (currentHover >= options.Count) currentHover = 0;
                 }
-                else if (key == ConsoleKey.Spacebar)
+                else if (keyPressed == ConsoleKey.Spacebar)
                 {
-                    if (checkedIndexes.Contains(selectedIndex))
-                        checkedIndexes.Remove(selectedIndex);
+                    if (selectedIndices.Contains(currentHover))
+                        selectedIndices.Remove(currentHover);
                     else
-                        checkedIndexes.Add(selectedIndex);
+                        selectedIndices.Add(currentHover);
                 }
-                else if (key == ConsoleKey.Enter)
-                {
-                    if (checkedIndexes.Count == 0) continue;
 
-                    Console.CursorVisible = true;
-                    Console.Clear();
-                    System.Threading.Thread.Sleep(100); 
-                    return new List<int>(checkedIndexes);
-                }
-            }
+            } while (keyPressed != ConsoleKey.Enter);
+
+            return selectedIndices;
         }
 
         public static void ShowSpinner(string message, int iterations = 15)
@@ -161,31 +160,23 @@ namespace SmartDividendTracker.Services
             Console.WriteLine("✔");
             Console.ResetColor();
             Console.CursorVisible = true;
-            System.Threading.Thread.Sleep(400); 
+            System.Threading.Thread.Sleep(400);
         }
+
         public static void ShowExitAnimation(string message)
         {
             Console.Clear();
-            Console.CursorVisible = false;
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("\n\n");
-            Console.Write("     ");
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
 
             foreach (char c in message)
             {
                 Console.Write(c);
-                System.Threading.Thread.Sleep(40);
+                System.Threading.Thread.Sleep(30);
             }
 
-            for (int i = 0; i < 3; i++)
-            {
-                Console.Write(" .");
-                System.Threading.Thread.Sleep(500);
-            }
-
+            Console.WriteLine("\n");
             Console.ResetColor();
-            Console.WriteLine("\n\n");
-            System.Threading.Thread.Sleep(500); 
+            System.Threading.Thread.Sleep(500);
         }
     }
 }

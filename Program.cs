@@ -85,7 +85,8 @@ namespace SmartDividendTracker
                 else if (choice == 2) TutorialService.ShowMenu(profile);
                 else if (choice == 3) CompoundCalculatorService.RunCalculator(isUa);
                
-                else if (choice == 4) GoalCalculatorService.Run(profile, onboarding); 
+                else if (choice == 4) GoalCalculatorService.Run(profile, onboarding);
+                else if (choice == 5) onboarding.OpenSettings(profile);
                 else if (choice == 6)
                 {
                     ConsoleHelper.ShowExitAnimation(LocalizationManager.Get("ExitMessage"));
@@ -230,7 +231,7 @@ namespace SmartDividendTracker
                     Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
                     Console.ReadKey(true);
                 }
-                else if (choice == 2) // Remove Stock
+                else if (choice == 2)
                 {
                     var stocks = portfolioManager.GetAllStocks();
 
@@ -273,7 +274,7 @@ namespace SmartDividendTracker
                     Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
                     Console.ReadKey(true);
                 }
-                else if (choice == 4) // Clear Portfolio
+                else if (choice == 4) 
                 {
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -305,7 +306,7 @@ namespace SmartDividendTracker
                     Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
                     Console.ReadKey(true);
                 }
-                else if (choice == 5) // Back
+                else if (choice == 5)
                 {
                     break;
                 }

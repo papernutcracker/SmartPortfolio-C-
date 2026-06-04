@@ -85,61 +85,54 @@ namespace SmartDividendTracker.Services
 
         public void OpenSettings(UserProfile profile)
         {
-            int lastChoice = 0;
+            int lastSettingsChoice = 0;
 
             while (true)
             {
-                bool isUa = profile.Language.ToString() == "UA" || profile.Language.ToString() == "Ukrainian";
-
-                string expText = profile.Experience.ToString();
-                if (isUa)
-                {
-                    expText = profile.Experience == ExperienceLevel.Beginner ? "Новачок" : "Досвідчений";
-                }
-
-                string title = isUa ? "      НАЛАШТУВАННЯ ПРОФІЛЮ" : "        PROFILE SETTINGS";
-                string header = $"{title}\n\n" +
-                                (isUa ? $"Поточна мова: {profile.Language}\nРівень досвіду: {expText}" : $"Current Language: {profile.Language}\nCurrent Experience Level: {profile.Experience}");
+                bool isUa = profile.Language == "UA";
+                string header = isUa ? "  ⚙️ НАЛАШТУВАННЯ ПРОФІЛЮ" : "  ⚙️ PROFILE SETTINGS";
 
                 var options = isUa ? new List<string>
                 {
-                    "Змінити мову",
-                    "Скинути налаштування (Видалити профіль)",
-                    "Повернутися до Головного Меню"
+                    "1. Змінити мову програми (UA/EN)",
+                    "2. Повністю скинути профіль інвестора",
+                    "3. Повернутися до Головного Меню"
                 } : new List<string>
                 {
-                    "Change Language",
-                    "Factory Reset (Delete Profile & Progress)",
-                    "Back to Main Menu"
+                    "1. Change Language (UA/EN)",
+                    "2. Reset Investor Profile",
+                    "3. Back to Main Menu"
                 };
 
-                int choice = ConsoleHelper.SelectOption(header, options, lastChoice);
-                lastChoice = choice;
+                int choice = ConsoleHelper.SelectOption(header, options, lastSettingsChoice);
+                lastSettingsChoice = choice;
 
                 if (choice == 0)
                 {
-                    string langHeader = isUa ? "Оберіть нову мову:" : "Select new language:";
-                    var langOptions = new List<string> { "English (EN)", "Українська (UA)" };
+                    profile.Language = profile.Language == "UA" ? "EN" : "UA";
+                    SaveProfile(profile); 
 
-                    int newLangChoice = ConsoleHelper.SelectOption(langHeader, langOptions);
-                    profile.Language = newLangChoice == 1 ? "UA" : "EN";
-
-                    SaveProfile(profile);
-
-                    Console.Clear();
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine(profile.Language == "UA" ? "\nМову успішно оновлено!" : "\nLanguage updated successfully!");
-                    Console.ResetColor();
-                    Console.WriteLine(profile.Language == "UA" ? "Натисніть будь-яку клавішу для продовження..." : "Press any key to continue...");
-                    Console.ReadKey(true);
+                    LocalizationManager.SetLanguage(profile.Language == "UA" ? "uk" : "en");
                 }
-                else if (choice == 1)
+                else if (choice == 1) 
                 {
-                    ResetProfile(isUa);
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write(isUa
+                        ? "⚠️ Ви впевнені, що хочете видалити профіль? (ТАК/НІ): "
+                        : "⚠️ Are you sure you want to delete your profile? (YES/NO): ");
+                    Console.ResetColor();
+
+                    string confirm = Console.ReadLine()?.Trim().ToUpper() ?? "";
+                    if (confirm == "ТАК" || confirm == "YES")
+                    {
+                        ResetProfile(isUa);
+                        break;
+                    }
                 }
                 else if (choice == 2)
                 {
-                    break;
+                    break; 
                 }
             }
         }
