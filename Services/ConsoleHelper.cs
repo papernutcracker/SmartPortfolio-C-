@@ -142,6 +142,27 @@ namespace SmartDividendTracker.Services
             }
         }
 
+        public static void ShowSpinner(string message, int iterations = 15)
+        {
+            Console.CursorVisible = false;
+            string[] spinner = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" };
+
+            Console.Write($"   {message}  ");
+
+            for (int i = 0; i < iterations; i++)
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write(spinner[i % spinner.Length]);
+                System.Threading.Thread.Sleep(80);
+                Console.Write("\b");
+            }
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("✔");
+            Console.ResetColor();
+            Console.CursorVisible = true;
+            System.Threading.Thread.Sleep(400); 
+        }
         public static void ShowExitAnimation(string message)
         {
             Console.Clear();

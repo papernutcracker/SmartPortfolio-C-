@@ -83,6 +83,10 @@ namespace SmartDividendTracker.Services
             decimal currentPrice = GetInput(isUa ? "1. Ціна твоєї цілі сьогодні ($): " : "1. Current cost of your goal ($): ");
             int years = (int)GetInput(isUa ? "2. Через скільки років плануєш купівлю: " : "2. Target horizon (years): ");
             decimal annualReturn = GetInput(isUa ? "3. Очікувана річна дохідність інвестицій (%): " : "3. Expected annual return (%): ");
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            ConsoleHelper.ShowSpinner(isUa
+                ? "Моделюємо вплив інфляції та прораховуємо складний відсоток..."
+                : "Modeling inflation impact and calculating compound interest...", 20);
 
             double inflationRate = 0.0214;
             double futurePrice = (double)currentPrice * Math.Pow(1 + inflationRate, years);

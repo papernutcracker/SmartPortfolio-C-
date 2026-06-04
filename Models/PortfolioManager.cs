@@ -110,7 +110,6 @@ namespace SmartDividendTracker.Services
                     sectorGroups[sector] = stock.TotalValue;
             }
 
-            // Малюємо гістограму на екрані
             foreach (var group in sectorGroups)
             {
                 decimal pct = (group.Value / totalValue) * 100;
@@ -145,6 +144,9 @@ namespace SmartDividendTracker.Services
         {
             if (File.Exists(_filePath))
             {
+                ConsoleHelper.ShowSpinner(LocalizationManager.GetCurrentLanguage() == "uk"
+                    ? "Зчитуємо дані портфеля з JSON..."
+                    : "Reading portfolio data from JSON...");
                 try
                 {
                     string json = File.ReadAllText(_filePath);
