@@ -12,5 +12,7 @@ namespace SmartDividendTracker.Models
         public InvestmentHorizon Horizon { get; set; }
         public bool HasExistingPortfolio { get; set; }
         public bool HasCompletedTutorial { get; set; } = false;
+
+        public System.Collections.Generic.List<CustomGoal> SavedCustomGoals { get; set; } = new();
     }
 }

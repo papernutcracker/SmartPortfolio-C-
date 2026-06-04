@@ -1,11 +1,48 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using SmartDividendTracker.Models;
 
 namespace SmartDividendTracker.Services
 {
     public static class GoalCalculatorService
     {
-        public static void Run(bool isUa)
+        public static void Run(UserProfile profile, OnboardingService onboarding)
+        {
+            bool isUa = profile.Language == "UA";
+            int lastChoice = 0;
+
+            while (true)
+            {
+                Console.Clear();
+
+                string header = isUa ? "  🎯 МЕНЕДЖЕР ФІНАНСОВИХ ЦІЛЕЙ" : "  🎯 FINANCIAL GOAL MANAGER";
+
+                var options = isUa ? new List<string>
+                {
+                    "1. Розрахувати та зберегти нову ціль",
+                    $"2. Переглянути мої цілі ({profile.SavedCustomGoals.Count})",
+                    "3. Видалити фінансову ціль",
+                    "4. Повернутися в головне меню"
+                } : new List<string>
+                {
+                    "1. Calculate and save a new goal",
+                    $"2. View my saved goals ({profile.SavedCustomGoals.Count})",
+                    "3. Delete a financial goal",
+                    "4. Back to Main Menu"
+                };
+
+                int choice = ConsoleHelper.SelectOption(header, options, lastChoice);
+                lastChoice = choice;
+
+                if (choice == 0) CalculateAndSaveNewGoal(profile, onboarding, isUa);
+                else if (choice == 1) ViewSavedGoals(profile, isUa);
+                else if (choice == 2) DeleteGoal(profile, onboarding, isUa);
+                else if (choice == 3) break;
+            }
+        }
+
+        private static void CalculateAndSaveNewGoal(UserProfile profile, OnboardingService onboarding, bool isUa)
         {
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Magenta;
@@ -20,90 +57,52 @@ namespace SmartDividendTracker.Services
                 Console.WriteLine("📌 Крок 1. Дізнайся 'реальну' ціну через роки (з інфляцією)");
                 Console.ResetColor();
                 Console.WriteLine("Гроші знецінюються, тому твоя ціль через роки коштуватиме дорожче.\n" +
-                                  "Як орієнтир для долара береться інфляція 2.14% річних.\n" +
-                                  "Формула: Сума сьогодні * (1.0214 ^ кількість років).\n");
+                                  "Як орієнтир для долара береться інфляція 2.14% річних.\n");
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("📌 Крок 2. Рахуємо, скільки треба відкладати щомісяця");
                 Console.ResetColor();
-                Console.WriteLine("Ми беремо майбутню ціну (з Кроку 1) і ділимо її на коефіцієнт\n" +
-                                  "складного відсотка твоєї очікуваної дохідності інвестицій.\n" +
-                                  "Це покаже необхідну суму на рік, яку ми ділимо на 12.\n");
-
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine("💡 ПРИКЛАД ДЛЯ НАОЧНОСТІ:");
-                Console.ResetColor();
-                Console.WriteLine("Тобі потрібно купити нерухомість через 10 років.\n" +
-                                  "• Ціль зараз: $50,000\n" +
-                                  "• Ціль через 10 років (з інфляцією): $60,950\n" +
-                                  "• Якщо інвестувати під 10% річних: треба ~$3,824 на рік.\n" +
-                                  "• ОТЖЕ, ЩОМІСЯЦЯ ТРЕБА ІНВЕСТУВАТИ: ~$319\n");
+                Console.WriteLine("Ми беремо майбутню ціну і ділимо її на коефіцієнт складного відсотка.\n");
 
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.WriteLine("Натисни будь-яку клавішу, щоб перейти до розрахунку власної цілі...");
+                Console.WriteLine("Натисни будь-яку клавішу, щоб перейти до розрахунку...");
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("📌 Step 1. Find the 'real' cost through the years (with inflation)");
                 Console.ResetColor();
-                Console.WriteLine("Money loses value, so your goal will cost more in the future.\n" +
-                                  "We use a standard 2.14% annual inflation rate for the USD.\n" +
-                                  "Formula: Current Cost * (1.0214 ^ number of years).\n");
+                Console.WriteLine("We use a standard 2.14% annual inflation rate for the USD.\n");
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("📌 Step 2. Calculate your monthly investment target");
                 Console.ResetColor();
-                Console.WriteLine("We take the future adjusted cost (from Step 1) and divide it by\n" +
-                                  "the compound interest factor based on your expected return.\n" +
-                                  "This gives the annual target, which we then divide by 12.\n");
-
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine("💡 PRACTICAL EXAMPLE:");
-                Console.ResetColor();
-                Console.WriteLine("Imagine you want to buy property in 10 years.\n" +
-                                  "• Goal cost today: $50,000\n" +
-                                  "• Cost in 10 years (adjusted for inflation): $60,950\n" +
-                                  "• If you invest at 10% ROI: you need ~$3,824 per year.\n" +
-                                  "• REQUIRED MONTHLY INVESTMENT: ~$319\n");
+                Console.WriteLine("We divide the future cost by the compound interest factor.\n");
 
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.WriteLine("Press any key to start calculating your own goal...");
             }
-
             Console.ReadKey(true);
 
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Magenta;
             Console.WriteLine("=========================================================");
-            Console.WriteLine(isUa ? "                КАЛЬКУЛЯТОР ФІНАНСОВОЇ ЦІЛІ              " : "                     GOAL CALCULATOR                     ");
+            Console.WriteLine(isUa ? "                НОВИЙ ФІНАНСОВИЙ ПЛАН ЦІЛІ               " : "                     NEW GOAL PLAN                       ");
             Console.WriteLine("=========================================================\n");
             Console.ResetColor();
+
+            Console.Write(isUa ? " Назви свою ціль (напр. Квартира): " : " Name your goal (e.g. Apartment): ");
+            string goalName = Console.ReadLine()?.Trim() ?? (isUa ? "Ціль" : "Goal");
+            if (string.IsNullOrEmpty(goalName)) goalName = isUa ? "Ціль" : "Goal";
 
             decimal currentPrice = GetInput(isUa ? "1. Ціна твоєї цілі сьогодні ($): " : "1. Current cost of your goal ($): ");
             int years = (int)GetInput(isUa ? "2. Через скільки років плануєш купівлю: " : "2. Target horizon (years): ");
             decimal annualReturn = GetInput(isUa ? "3. Очікувана річна дохідність інвестицій (%): " : "3. Expected annual return (%): ");
-            Console.ForegroundColor = ConsoleColor.DarkGray;
-            ConsoleHelper.ShowSpinner(isUa
-                ? "Моделюємо вплив інфляції та прораховуємо складний відсоток..."
-                : "Modeling inflation impact and calculating compound interest...", 20);
 
             double inflationRate = 0.0214;
             double futurePrice = (double)currentPrice * Math.Pow(1 + inflationRate, years);
-
             double r = (double)annualReturn / 100;
-            double annualContribution = 0;
-
-            if (r > 0)
-            {
-                double temp = Math.Pow(1 + r, years) - 1;
-                annualContribution = futurePrice / (temp / r);
-            }
-            else
-            {
-                annualContribution = futurePrice / years;
-            }
-
+            double annualContribution = r > 0 ? futurePrice / ((Math.Pow(1 + r, years) - 1) / r) : futurePrice / years;
             double monthlyContribution = annualContribution / 12;
 
             Console.ForegroundColor = ConsoleColor.Green;
@@ -113,52 +112,146 @@ namespace SmartDividendTracker.Services
             Console.ResetColor();
 
             Console.WriteLine(isUa
-                ? $"Крок 1. Реальна вартість цілі через {years} років (інфляція 2.14%): ${futurePrice:F2}"
-                : $"Step 1. Real goal cost in {years} years (2.14% inflation): ${futurePrice:F2}");
-
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(isUa
-                ? $"Крок 2. Необхідно інвестувати за 1 рік:                      ${annualContribution:F2}"
-                : $"Step 2. Required investment per year:                        ${annualContribution:F2}");
+                ? $"🎯 Ціль: {goalName}\n" +
+                  $"• Вартість сьогодні: ${currentPrice:F2}\n" +
+                  $"• Вартість через {years} років (з інфляцією 2.14%): ${futurePrice:F2}"
+                : $"🎯 Goal: {goalName}\n" +
+                  $"• Cost today: ${currentPrice:F2}\n" +
+                  $"• Cost in {years} years (2.14% inflation): ${futurePrice:F2}");
 
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine(isUa
-                ? $"➜ Тобі потрібно вкладати в місяць:                           ${monthlyContribution:F2}"
-                : $"➜ You need to invest per month:                              ${monthlyContribution:F2}");
+                ? $"➜ НЕОБХІДНО ІНВЕСТУВАТИ ЩОМІСЯЦЯ: ${monthlyContribution:F2}"
+                : $"➜ REQUIRED MONTHLY INVESTMENT: ${monthlyContribution:F2}");
             Console.ResetColor();
 
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("\n---------------------------------------------------------");
-            Console.WriteLine(isUa ? "📋 ЩО ТОБІ ПОТРІБНО ЗРОБИТИ ЗАРАЗ (ЧЕК-ЛИСТ):" : "📋 YOUR NEXT STEPS (CHECKLIST):");
-            Console.WriteLine("---------------------------------------------------------");
-            Console.ResetColor();
+            Console.Write(isUa ? "\n💾 Бажаєш зберегти цю ціль у свій профіль? (ТАК/НІ): " : "\n💾 Do you want to save this goal to your profile? (YES/NO): ");
+            string answer = Console.ReadLine()?.Trim().ToUpper() ?? "";
 
-            if (isUa)
+            if (answer == "ТАК" || answer == "YES")
             {
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine($"✓ [ ] Тобі потрібно вкладати в місяць: ${monthlyContribution:F2}");
-                Console.ResetColor();
-                Console.WriteLine("✓ [ ] Порахуй свій щомісячний дохід: скільки маєш зараз і скільки потрібно, щоб відкладати цю суму.");
-                Console.WriteLine("✓ [ ] Не будь перфекціоністом: якщо цифри лякають, збільш термін або розбий ціль на етапи.");
+                var newGoal = new CustomGoal
+                {
+                    Name = goalName,
+                    CurrentPrice = currentPrice,
+                    Years = years,
+                    AnnualReturn = annualReturn,
+                    FuturePrice = futurePrice,
+                    MonthlyContribution = monthlyContribution
+                };
+
+                if (profile.SavedCustomGoals == null) profile.SavedCustomGoals = new List<CustomGoal>();
+                profile.SavedCustomGoals.Add(newGoal);
+
+                onboarding.SaveProfile(profile);
+
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("\n🌟 Головне — це регулярність внесків! Твої цілі абсолютно реальні.");
+                Console.WriteLine(isUa ? "\n✔ Ціль успішно збережено!" : "\n✔ Goal saved successfully!");
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine($"✓ [ ] You need to invest per month: ${monthlyContribution:F2}");
-                Console.ResetColor();
-                Console.WriteLine("✓ [ ] Calculate your monthly budget: look at what you have and what changes are needed.");
-                Console.WriteLine("✓ [ ] Don't be a perfectionist: if numbers scare you, extend the deadline or divide the goal.");
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("\n🌟 Consistency is key! Your goals are absolutely within reach.");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(isUa ? "\nРозрахунок завершено без збереження." : "\nCalculation finished without saving.");
             }
             Console.ResetColor();
 
             Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}"); 
+            Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
+            Console.ReadKey(true);
+        }
+
+        private static void ViewSavedGoals(UserProfile profile, bool isUa)
+        {
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("=========================================================================================");
+            Console.WriteLine(isUa ? "                                 СПИСОК МОЇХ ФІНАНСОВИХ ЦІЛЕЙ                            " : "                                      MY SAVED FINANCIAL GOALS                           ");
+            Console.WriteLine("=========================================================================================\n");
+            Console.ResetColor();
+
+            if (profile.SavedCustomGoals == null || profile.SavedCustomGoals.Count == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(isUa ? "У тебе поки немає збережених цілей. Прорахуй щось у пункті 1!" : "You have no saved goals yet. Calculate one in option 1!");
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.BackgroundColor = ConsoleColor.DarkMagenta;
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine(isUa
+                    ? $"| {"Назва цілі",-15} | {"Ціна зараз",-12} | {"Років",-5} | {"Дохідн.",-7} | {"Ціна майбут.",-14} | {"Внесок/міс",-12} |"
+                    : $"| {"Goal Name",-15} | {"Price Today",-12} | {"Years",-5} | {"Return",-7} | {"Future Price",-14} | {"Monthly Inv",-12} |");
+                Console.ResetColor();
+                Console.WriteLine(new string('-', 83));
+
+                foreach (var goal in profile.SavedCustomGoals)
+                {
+                    Console.WriteLine($"| {goal.Name,-15} | ${goal.CurrentPrice,-11:F0} | {goal.Years,-5} | {goal.AnnualReturn,-5:F0}% | ${goal.FuturePrice,-12:F2} | ${goal.MonthlyContribution,-11:F2} |");
+                }
+                Console.WriteLine(new string('-', 83));
+            }
+
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
             Console.ReadKey(true);
             Console.ResetColor();
+        }
+
+        private static void DeleteGoal(UserProfile profile, OnboardingService onboarding, bool isUa)
+        {
+            if (profile.SavedCustomGoals == null || profile.SavedCustomGoals.Count == 0)
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(isUa ? "\nУ тебе немає збережених цілей для видалення." : "\nYou have no saved goals to delete.");
+                Console.ResetColor();
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
+                Console.ReadKey(true);
+                return;
+            }
+
+            var goalOptions = new List<string>();
+            foreach (var goal in profile.SavedCustomGoals)
+            {
+                goalOptions.Add($"{goal.Name,-15} | {goal.Years} {EnvironmentText(goal.Years, isUa)} ➜ ${goal.MonthlyContribution:F2}/міс");
+            }
+            goalOptions.Add(isUa ? "[ Скасувати дію ]" : "[ Cancel Action ]");
+
+            string prompt = isUa ? "Оберіть фінансову ціль, яку бажаєте видалити:" : "Select a financial goal to delete:";
+            int choice = ConsoleHelper.SelectOption(prompt, goalOptions);
+
+            if (choice < profile.SavedCustomGoals.Count)
+            {
+                string deletedName = profile.SavedCustomGoals[choice].Name;
+                profile.SavedCustomGoals.RemoveAt(choice);
+
+                onboarding.SaveProfile(profile);
+
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(isUa
+                    ? $"\n✔ Ціль «{deletedName}» успешно видалено з твого профілю!"
+                    : $"\n✔ Goal \"{deletedName}\" has been successfully removed!");
+                Console.ResetColor();
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
+                Console.ReadKey(true);
+            }
+        }
+
+        private static string EnvironmentText(int years, bool isUa)
+        {
+            if (!isUa) return years == 1 ? "year" : "years";
+
+            int lastDigit = years % 10;
+            int lastTwoDigits = years % 100;
+
+            if (lastTwoDigits >= 11 && lastTwoDigits <= 14) return "років";
+            if (lastDigit == 1) return "рік";
+            if (lastDigit >= 2 && lastDigit <= 4) return "роки";
+            return "років";
         }
 
         private static decimal GetInput(string prompt)
@@ -167,11 +260,8 @@ namespace SmartDividendTracker.Services
             {
                 Console.Write(prompt);
                 string input = Console.ReadLine()?.Replace(",", ".") ?? "";
-
-                if (decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal value) && value >= 0) //
-                {
+                if (decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal value) && value >= 0)
                     return value;
-                }
 
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(LocalizationManager.Get("InvalidInput"));

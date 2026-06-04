@@ -84,8 +84,8 @@ namespace SmartDividendTracker
                 else if (choice == 1) CheatSheetService.Show(isUa);
                 else if (choice == 2) TutorialService.ShowMenu(profile);
                 else if (choice == 3) CompoundCalculatorService.RunCalculator(isUa);
-                else if (choice == 4) GoalCalculatorService.Run(isUa);
-                else if (choice == 5) onboarding.OpenSettings(profile);
+               
+                else if (choice == 4) GoalCalculatorService.Run(profile, onboarding); 
                 else if (choice == 6)
                 {
                     ConsoleHelper.ShowExitAnimation(LocalizationManager.Get("ExitMessage"));
