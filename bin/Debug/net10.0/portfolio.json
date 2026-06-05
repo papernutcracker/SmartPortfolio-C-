@@ -1,1 +1,11 @@
-[]
+[
+  {
+    "DividendYield": 8,
+    "PeRatio": 7,
+    "Ticker": "HF",
+    "Sector": "Financials",
+    "AveragePrice": 78,
+    "Shares": 9,
+    "TotalValue": 702
+  }
+]

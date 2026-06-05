@@ -5,16 +5,11 @@ namespace SmartDividendTracker.Services
 {
     public static class ConsoleHelper
     {
-        // 🔥 ФІКС: Класову статичну змінну _selectedIndex ПОВНІСТЮ ВИДАЛЕНО,
-        // щоб виключити будь-яке перетікання індексів між різними меню!
-
-        // Головний метод інтерактивного меню з локальним станом
+        
         public static int SelectOption(string prompt, List<string> options, int defaultIndex = 0)
         {
-            // Створюємо локальну змінну на стеку — вона живе лише поки працює це конкретне меню
             int selectedIndex = defaultIndex;
 
-            // Захист від некоректного дефолтного індексу
             if (selectedIndex >= options.Count || selectedIndex < 0)
             {
                 selectedIndex = 0;
