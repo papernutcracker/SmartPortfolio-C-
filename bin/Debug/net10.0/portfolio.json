@@ -1,11 +1,11 @@
 [
   {
-    "DividendYield": 8,
-    "PeRatio": 7,
-    "Ticker": "HF",
-    "Sector": "Financials",
-    "AveragePrice": 78,
-    "Shares": 9,
-    "TotalValue": 702
+    "DividendYield": 4,
+    "PeRatio": 5,
+    "Ticker": "\u041E\u041F\u0410",
+    "Sector": "Healthcare",
+    "AveragePrice": 6,
+    "Shares": 7,
+    "TotalValue": 42
   }
 ]

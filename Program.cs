@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using SmartDividendTracker.Models;
 using SmartDividendTracker.Services;
 
@@ -29,7 +30,7 @@ namespace SmartDividendTracker
             ShowMainMenu(currentUser, portfolioManager, onboarding);
         }
 
-        static void ShowMainMenu(UserProfile profile, PortfolioManager portfolioManager, OnboardingService onboarding)
+        public static void ShowMainMenu(UserProfile profile, PortfolioManager portfolioManager, OnboardingService onboarding)
         {
             int lastMainChoice = 0;
 
@@ -38,6 +39,18 @@ namespace SmartDividendTracker
                 LocalizationManager.SetLanguage(profile.Language == "UA" ? "uk" : "en");
                 bool isUa = LocalizationManager.GetCurrentLanguage() == "uk";
 
+                // Динамічно створюємо список команд під поточну локалізацію
+                var commands = new List<IMenuCommand>
+                {
+                    new ViewPortfolioCommand(portfolioManager),
+                    new CheatSheetCommand(),
+                    new TutorialMenuCommand(profile),
+                    new CompoundCalculatorCommand(),
+                    new GoalCalculatorCommand(profile, onboarding),
+                    new OpenSettingsCommand(profile, onboarding)
+                };
+
+                // Збирання інформаційного хедера (ваша оригінальна логіка)
                 var localizedGoalsList = new List<string>();
                 foreach (var goal in profile.Goals)
                 {
@@ -66,36 +79,31 @@ namespace SmartDividendTracker
                 string header = $"--- {LocalizationManager.Get("MainMenu")} ---\n" +
                                 $"[{LocalizationManager.Get("GoalPrompt")}: {goalsText} | {LocalizationManager.Get("HorizonPrompt")}: {localizedHorizon} | {LocalizationManager.Get("ExpLevel")}: {expText}]";
 
-                var menuOptions = new List<string>
-                {
-                    LocalizationManager.Get("MenuOpt1"),     
-                    LocalizationManager.Get("CheatSheetOpt"), 
-                    LocalizationManager.Get("EduMenuTitle"),    
-                    LocalizationManager.Get("MenuOpt5"),      
-                    LocalizationManager.Get("MenuOptGoalCalc"),
-                    LocalizationManager.Get("MenuOpt4"),      
-                    LocalizationManager.Get("MenuOpt3")      
-                };
+                // Автоматично формуємо назви пунктів меню на основі властивостей DisplayName команд
+                var menuOptions = commands.Select(c => c.DisplayName).ToList();
+
+                // Додаємо пункт "Вихід" в самий кінець списку
+                menuOptions.Add(LocalizationManager.Get("MenuOpt3"));
 
                 int choice = ConsoleHelper.SelectOption(header, menuOptions, lastMainChoice);
                 lastMainChoice = choice;
 
-                if (choice == 0) ShowPortfolioMenu(portfolioManager);
-                else if (choice == 1) CheatSheetService.Show(isUa);
-                else if (choice == 2) TutorialService.ShowMenu(profile);
-                else if (choice == 3) CompoundCalculatorService.RunCalculator(isUa);
-               
-                else if (choice == 4) GoalCalculatorService.Run(profile, onboarding);
-                else if (choice == 5) onboarding.OpenSettings(profile);
-                else if (choice == 6)
+                // Перевіряємо, чи обрано останній пункт (Вихід)
+                if (choice == menuOptions.Count - 1)
                 {
                     ConsoleHelper.ShowExitAnimation(LocalizationManager.Get("ExitMessage"));
                     break;
                 }
+
+                // Виконуємо команду за її індексом у списку без жодних if/else
+                if (choice >= 0 && choice < commands.Count)
+                {
+                    commands[choice].Execute();
+                }
             }
         }
 
-        static void ShowPortfolioMenu(PortfolioManager portfolioManager)
+        public static void ShowPortfolioMenu(PortfolioManager portfolioManager)
         {
             int lastChoice = 0;
 
@@ -119,7 +127,7 @@ namespace SmartDividendTracker
                 int choice = ConsoleHelper.SelectOption(header, options, lastChoice);
                 lastChoice = choice;
 
-                if (choice == 0) 
+                if (choice == 0)
                 {
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Cyan;
@@ -231,7 +239,7 @@ namespace SmartDividendTracker
                     Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
                     Console.ReadKey(true);
                 }
-                else if (choice == 2)
+                else if (choice == 2) // Remove Stock
                 {
                     var stocks = portfolioManager.GetAllStocks();
 
@@ -274,7 +282,7 @@ namespace SmartDividendTracker
                     Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
                     Console.ReadKey(true);
                 }
-                else if (choice == 4) 
+                else if (choice == 4) // Clear Portfolio
                 {
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -306,7 +314,7 @@ namespace SmartDividendTracker
                     Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
                     Console.ReadKey(true);
                 }
-                else if (choice == 5)
+                else if (choice == 5) // Back
                 {
                     break;
                 }
