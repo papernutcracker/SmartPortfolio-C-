@@ -4,9 +4,9 @@ namespace SmartDividendTracker.Models
 {
     public class UserProfile
     {
+        public int Id { get; set; }
         public string Language { get; set; } = "en";
         public ExperienceLevel Experience { get; set; }
-
         public List<InvestmentGoal> Goals { get; set; } = new List<InvestmentGoal>();
 
         public InvestmentHorizon Horizon { get; set; }

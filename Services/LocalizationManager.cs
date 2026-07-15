@@ -122,6 +122,55 @@ namespace SmartDividendTracker.Services
             { "CalcMonthly", ("Monthly Contribution", "Щомісячне поповнення") },
             { "CalcRate", ("Estimated Annual Yield (%)", "Очікувана річна дохідність (%)") },
             { "CalcYears", ("Investment Period (Years)", "Термін інвестування (років)") },
+
+            // Головне меню калькулятора цілей
+            { "GoalMenuHeader", ("  🎯 FINANCIAL GOAL MANAGER", "  🎯 МЕНЕДЖЕР ФІНАНСОВИХ ЦІЛЕЙ") },
+            { "GoalMenuOpt1", ("1. Calculate and save a new goal", "1. Розрахувати та зберегти нову ціль") },
+            { "GoalMenuOpt2", ("2. View my saved goals", "2. Переглянути мої цілі") },
+            { "GoalMenuOpt3", ("3. Delete a financial goal", "3. Видалити фінансову ціль") },
+            { "GoalMenuOpt4", ("4. Back to Main Menu", "4. Повернутися в головне меню") },
+
+            // Екран "Як це працює"
+            { "GoalHowItWorks", ("              HOW THE GOAL PLANNING WORKS                  ", "         ЯК ПРАЦЮЄ АЛГОРИТМ ПЛАНУВАННЯ ЦІЛІ             ") },
+            { "GoalStep1Title", ("📌 Step 1. Find the 'real' cost through the years (with inflation)", "📌 Крок 1. Дізнайся 'реальну' ціну через роки (з інфляцією)") },
+            { "GoalStep1Desc", ("We use a standard 2.14% annual inflation rate for the USD.", "Гроші знецінюються, тому твоя ціль через роки коштуватиме дорожче.\nЯк орієнтир для долара береться інфляція 2.14% річних.") },
+            { "GoalStep2Title", ("📌 Step 2. Calculate your monthly investment target", "📌 Крок 2. Рахуємо, скільки треба відкладати щомісяця") },
+            { "GoalStep2Desc", ("We divide the future cost by the compound interest factor.", "Ми беремо майбутню ціну і ділимо її на коефіцієнт складного відсотка.") },
+            { "GoalPressAnyCalc", ("Press any key to start calculating your own goal...", "Натисни будь-яку клавішу, щоб перейти до розрахунку...") },
+
+            // Запит даних
+            { "GoalNewPlanHeader", ("                     NEW GOAL PLAN                       ", "                НОВИЙ ФІНАНСОВИЙ ПЛАН ЦІЛІ               ") },
+            { "GoalNamePrompt", (" Name your goal (e.g. Apartment)", " Назви свою ціль (напр. Квартира)") },
+            { "GoalPricePrompt", ("1. Current cost of your goal ($)", "1. Ціна твоєї цілі сьогодні ($)") },
+            { "GoalYearsPrompt", ("2. Target horizon (years)", "2. Через скільки років плануєш купівлю") },
+            { "GoalRatePrompt", ("3. Expected annual return (%)", "3. Очікувана річна дохідність інвестицій (%)") },
+
+            // Екран результатів
+            { "GoalCalcHeader", ("                   PLAN CALCULATIONS                     ", "                   РОЗРАХУНОК ПЛАНУ                      ") },
+            { "GoalTarget", ("🎯 Goal:", "🎯 Ціль:") },
+            { "GoalCostToday", ("• Cost today:", "• Вартість сьогодні:") },
+            { "GoalCostFuture", ("• Cost in {0} years (2.14% inflation):", "• Вартість через {0} років (з інфляцією 2.14%):") },
+            { "GoalReqInv", ("➜ REQUIRED MONTHLY INVESTMENT:", "➜ НЕОБХІДНО ІНВЕСТУВАТИ ЩОМІСЯЦЯ:") },
+            { "GoalSavePrompt", ("\n💾 Do you want to save this goal to your profile? (YES/NO): ", "\n💾 Бажаєш зберегти цю ціль у свій профіль? (ТАК/НІ): ") },
+            { "GoalSavedSuccess", ("\n✔ Goal saved successfully!", "\n✔ Ціль успішно збережено!") },
+            { "GoalSavedCancel", ("\nCalculation finished without saving.", "\nРозрахунок завершено без збереження.") },
+
+            // Перегляд цілей (Таблиця)
+            { "GoalListHeader", ("                                     MY SAVED FINANCIAL GOALS                            ", "                                 СПИСОК МОЇХ ФІНАНСОВИХ ЦІЛЕЙ                            ") },
+            { "GoalListEmpty", ("You have no saved goals yet. Calculate one in option 1!", "У тебе поки немає збережених цілей. Прорахуй щось у пункті 1!") },
+            { "TblGoalName", ("Goal Name", "Назва цілі") },
+            { "TblPriceToday", ("Price Today", "Ціна зараз") },
+            { "TblYears", ("Years", "Років") },
+            { "TblReturn", ("Return", "Дохідн.") },
+            { "TblFuturePrice", ("Future Price", "Ціна майбут.") },
+            { "TblMonthlyInv", ("Monthly Inv", "Внесок/міс") },
+
+            // Видалення цілей
+            { "GoalDelEmpty", ("\nYou have no saved goals to delete.", "\nУ тебе немає збережених цілей для видалення.") },
+            { "GoalYearsWord", ("years", "років") },
+            { "GoalDelCancel", ("[ Cancel Action ]", "[ Скасувати дію ]") },
+            { "GoalDelPrompt", ("Select a financial goal to delete:", "Оберіть фінансову ціль, яку бажаєте видалити:") },
+            { "GoalDelSuccess", ("\n✔ Goal \"{0}\" has been successfully removed!", "\n✔ Ціль «{0}» успішно видалено з твого профілю!") },
         };
 
         public static string Get(string key)

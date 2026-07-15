@@ -2,6 +2,7 @@
 {
     public class CustomGoal
     {
+        public int Id { get; set; }
         public string Name { get; set; } = "Ціль";
         public decimal CurrentPrice { get; set; }
         public int Years { get; set; }

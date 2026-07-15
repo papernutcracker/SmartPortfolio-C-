@@ -2,6 +2,7 @@
 {
     public class DividendStock : Asset
     {
+        public int Id { get; set; }
         public decimal DividendYield { get; set; }
         public decimal PeRatio { get; set; }
 

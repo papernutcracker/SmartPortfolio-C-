@@ -1,9 +1,10 @@
 {
-  "Language": "EN",
-  "Experience": 2,
+  "Id": 0,
+  "Language": "UA",
+  "Experience": 1,
   "Goals": [],
   "Horizon": 0,
   "HasExistingPortfolio": false,
-  "HasCompletedTutorial": false,
+  "HasCompletedTutorial": true,
   "SavedCustomGoals": []
 }
