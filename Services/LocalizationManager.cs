@@ -23,6 +23,8 @@ namespace SmartDividendTracker.Services
             { "GoalInfo", ("Type your main investment goal (e.g., Passive Income): ", "Введіть вашу головну мету (напр., Пасивний дохід): ") },
             { "HorizonPrompt", ("Select your investment horizon", "Оберіть ваш термін інвестування") },
             { "Horiz5", ("Up to 5 years", "До 5 років") },
+            { "ViewSectorChart", ("View Sector Chart", "Переглянути діаграму часток") },
+           
             { "Horiz10", ("Up to 10 years", "До 10 років") },
             { "HorizMore", ("More than 10 years", "Більше 10 років") },
             { "HasPort", ("Do you already have an investment portfolio?", "Чи є у вас вже інвестиційний портфель?") },
@@ -49,7 +51,6 @@ namespace SmartDividendTracker.Services
             { "ChangeHorizon", ("Change Investment Horizon", "Змінити горизонт інвестування") },
             { "ResetTutorial", ("Reset Tutorial", "Скинути навчання (Туторіал)") },
             { "TutResetSuccess", ("Tutorial status has been reset! It will launch on next restart.", "Статус навчання скинуто! Воно запуститься при наступному старті.") },
-
 
             { "SettingsMenu", ("PROFILE SETTINGS", "НАЛАШТУВАННЯ ПРОФІЛЮ") },
             { "SetGoals", ("Change Investment Goals", "Змінити цілі інвестування") },
@@ -78,7 +79,6 @@ namespace SmartDividendTracker.Services
             { "EmptyPort", ("Your portfolio is empty. Add some assets first!", "Ваш портфель порожній. Додайте активи!") },
             { "SelectToRemove", ("Select an asset to remove", "Оберіть актив для видалення") },
             { "StockRemoved", ("Asset successfully removed!", "Актив успішно видалено!") },
-            { "Cancel", ("Cancel", "Скасувати") },
             { "CalcMenuTitle", ("COMPOUND INTEREST MAGIC", "МАГІЯ СКЛАДНОГО ВІДСОТКА") },
             { "EnterMonthly", ("Enter your monthly contribution ($): ", "Скільки ви можете відкладати щомісяця? ($): ") },
             { "EnterRate", ("Enter expected annual return (%, default 8%): ", "Очікувана річна дохідність (%, зазвичай 8-10%): ") },
@@ -113,7 +113,15 @@ namespace SmartDividendTracker.Services
             { "SecUtilities", ("Utilities", "Комунальні послуги") },
             { "SecRealEstate", ("Real Estate", "Нерухомість") },
             { "SecIndustrials", ("Industrials", "Промисловість") },
-            { "SecMaterials", ("Materials", "Матеріали") }
+            { "SecMaterials", ("Materials", "Матеріали") },
+            { "CancelHint", ("Press Enter to cancel", "Натисніть Enter для відміни") },
+            { "Cancel", ("Cancel", "Відміна") },
+
+            { "CompoundCalc", ("Compound Interest Calculator", "Калькулятор складного відсотка") },
+            { "CalcInitial", ("Initial Investment", "Початковий капітал") },
+            { "CalcMonthly", ("Monthly Contribution", "Щомісячне поповнення") },
+            { "CalcRate", ("Estimated Annual Yield (%)", "Очікувана річна дохідність (%)") },
+            { "CalcYears", ("Investment Period (Years)", "Термін інвестування (років)") },
         };
 
         public static string Get(string key)

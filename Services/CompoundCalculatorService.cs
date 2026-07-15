@@ -8,16 +8,27 @@ namespace SmartDividendTracker.Services
         public static void RunCalculator(bool isUa)
         {
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.WriteLine("=========================================================");
-            Console.WriteLine(isUa ? "             КАЛЬКУЛЯТОР СКЛАДНОГО ВІДСОТКА              " : "             COMPOUND INTEREST CALCULATOR                ");
-            Console.WriteLine("=========================================================\n");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("=======================================");
+            Console.WriteLine($"  {LocalizationManager.Get("CompoundCalc").ToUpper()}"); 
+            Console.WriteLine("=======================================\n");
             Console.ResetColor();
 
-            decimal principal = GetInput(isUa ? "Початковий капітал ($): " : "Initial Investment ($): ");
-            decimal monthlyContribution = GetInput(isUa ? "Щомісячне поповнення ($): " : "Monthly Contribution ($): ");
-            decimal annualRate = GetInput(isUa ? "Очікувана річна дохідність (%): " : "Expected Annual Return (%): ");
-            int years = (int)GetInput(isUa ? "Термін інвестування (років): " : "Investment Horizon (years): ");
+            decimal? inputPrincipal = GetInput(LocalizationManager.Get("CalcInitial"), true);
+            if (inputPrincipal == null) return;
+            decimal principal = inputPrincipal.Value;
+
+            decimal? inputMonthly = GetInput(LocalizationManager.Get("CalcMonthly"));
+            if (inputMonthly == null) return;
+            decimal monthlyContribution = inputMonthly.Value;
+
+            decimal? inputRate = GetInput(LocalizationManager.Get("CalcRate"));
+            if (inputRate == null) return;
+            decimal annualRate = inputRate.Value;
+
+            decimal? inputYears = GetInput(LocalizationManager.Get("CalcYears"));
+            if (inputYears == null) return;
+            int years = (int)inputYears.Value;
 
             double r = (double)annualRate / 100;
             int n = 12;
@@ -49,19 +60,25 @@ namespace SmartDividendTracker.Services
             Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
             Console.ReadKey(true);
             Console.ResetColor();
+
+            Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
+            Console.ReadKey(true);
         }
 
-        private static decimal GetInput(string prompt)
+        private static decimal? GetInput(string prompt, bool allowCancel = false)
         {
             while (true)
             {
-                Console.Write(prompt);
-                string input = Console.ReadLine()?.Replace(",", ".") ?? "";
+                string hint = allowCancel ? $" ({LocalizationManager.Get("CancelHint")})" : "";
+                Console.Write($"{prompt}{hint}: ");
 
-                if (decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal value) && value >= 0)
-                {
+                string input = Console.ReadLine()?.Trim().Replace(",", ".") ?? "";
+
+                if (string.IsNullOrEmpty(input) && allowCancel)
+                    return null;
+
+                if (!string.IsNullOrEmpty(input) && decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal value) && value >= 0)
                     return value;
-                }
 
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(LocalizationManager.Get("InvalidInput"));

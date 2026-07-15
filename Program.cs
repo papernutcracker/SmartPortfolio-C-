@@ -11,7 +11,6 @@ namespace SmartDividendTracker
     {
         static void Main(string[] args)
         {
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.InputEncoding = System.Text.Encoding.UTF8;
 
             var onboarding = new OnboardingService();
@@ -39,7 +38,6 @@ namespace SmartDividendTracker
                 LocalizationManager.SetLanguage(profile.Language == "UA" ? "uk" : "en");
                 bool isUa = LocalizationManager.GetCurrentLanguage() == "uk";
 
-                // Динамічно створюємо список команд під поточну локалізацію
                 var commands = new List<IMenuCommand>
                 {
                     new ViewPortfolioCommand(portfolioManager),
@@ -50,7 +48,6 @@ namespace SmartDividendTracker
                     new OpenSettingsCommand(profile, onboarding)
                 };
 
-                // Збирання інформаційного хедера (ваша оригінальна логіка)
                 var localizedGoalsList = new List<string>();
                 foreach (var goal in profile.Goals)
                 {
@@ -79,23 +76,19 @@ namespace SmartDividendTracker
                 string header = $"--- {LocalizationManager.Get("MainMenu")} ---\n" +
                                 $"[{LocalizationManager.Get("GoalPrompt")}: {goalsText} | {LocalizationManager.Get("HorizonPrompt")}: {localizedHorizon} | {LocalizationManager.Get("ExpLevel")}: {expText}]";
 
-                // Автоматично формуємо назви пунктів меню на основі властивостей DisplayName команд
                 var menuOptions = commands.Select(c => c.DisplayName).ToList();
 
-                // Додаємо пункт "Вихід" в самий кінець списку
                 menuOptions.Add(LocalizationManager.Get("MenuOpt3"));
 
                 int choice = ConsoleHelper.SelectOption(header, menuOptions, lastMainChoice);
                 lastMainChoice = choice;
 
-                // Перевіряємо, чи обрано останній пункт (Вихід)
                 if (choice == menuOptions.Count - 1)
                 {
                     ConsoleHelper.ShowExitAnimation(LocalizationManager.Get("ExitMessage"));
                     break;
                 }
 
-                // Виконуємо команду за її індексом у списку без жодних if/else
                 if (choice >= 0 && choice < commands.Count)
                 {
                     commands[choice].Execute();
@@ -119,7 +112,7 @@ namespace SmartDividendTracker
                     LocalizationManager.Get("ViewAssets"),
                     LocalizationManager.Get("AddStock"),
                     LocalizationManager.Get("RemoveStock"),
-                    isUa ? "Переглянути діаграму часток" : "View Sector Chart",
+                    LocalizationManager.Get("ViewSectorChart"),
                     LocalizationManager.Get("ClearPortfolio"),
                     LocalizationManager.Get("Back")
                 };
@@ -156,24 +149,20 @@ namespace SmartDividendTracker
                         {
                             decimal annualDiv = stock.CalculateAnnualDividend();
 
-                            string displaySector = stock.Sector;
-                            if (isUa)
+                            string displaySector = stock.Sector switch
                             {
-                                displaySector = stock.Sector switch
-                                {
-                                    "Technology" => LocalizationManager.Get("SecTech"),
-                                    "Financials" => LocalizationManager.Get("SecFinance"),
-                                    "Healthcare" => LocalizationManager.Get("SecHealth"),
-                                    "Consumer Staples" => "Товари першої необх.",
-                                    "Consumer Discretionary" => LocalizationManager.Get("SecDiscretionary"),
-                                    "Energy" => LocalizationManager.Get("SecEnergy"),
-                                    "Utilities" => "Комун. послуги",
-                                    "Real Estate" => LocalizationManager.Get("SecRealEstate"),
-                                    "Industrials" => LocalizationManager.Get("SecIndustrials"),
-                                    "Materials" => LocalizationManager.Get("SecMaterials"),
-                                    _ => stock.Sector
-                                };
-                            }
+                                "Technology" => LocalizationManager.Get("SecTech"),
+                                "Financials" => LocalizationManager.Get("SecFinance"),
+                                "Healthcare" => LocalizationManager.Get("SecHealth"),
+                                "Consumer Staples" => LocalizationManager.Get("SecStaples"),
+                                "Consumer Discretionary" => LocalizationManager.Get("SecDiscretionary"),
+                                "Energy" => LocalizationManager.Get("SecEnergy"),
+                                "Utilities" => LocalizationManager.Get("SecUtilities"),
+                                "Real Estate" => LocalizationManager.Get("SecRealEstate"),
+                                "Industrials" => LocalizationManager.Get("SecIndustrials"),
+                                "Materials" => LocalizationManager.Get("SecMaterials"),
+                                _ => stock.Sector
+                            };
 
                             Console.WriteLine($"| {stock.Ticker,-6} | {displaySector,-22} | {stock.AveragePrice,8:F2} | {stock.Shares,5} | {stock.TotalValue,12:F2} | {stock.DividendYield,6:F2}% | {annualDiv,10:F2} |");
                         }
@@ -200,36 +189,52 @@ namespace SmartDividendTracker
                     Console.WriteLine("=======================================\n");
                     Console.ResetColor();
 
-                    Console.Write(LocalizationManager.Get("EnterTicker"));
-                    string ticker = Console.ReadLine()?.Trim().ToUpper() ?? "UNKNOWN";
+                    // 1. Ввід тікера з можливістю виходу
+                    Console.Write($"{LocalizationManager.Get("EnterTicker")} ({LocalizationManager.Get("CancelHint")}): ");
+                    string ticker = Console.ReadLine()?.Trim().ToUpper() ?? "";
+                    if (string.IsNullOrEmpty(ticker)) continue; // Вихід в меню
 
                     var systemSectors = new List<string> {
-                        "Technology", "Financials", "Healthcare", "Consumer Staples",
-                        "Consumer Discretionary", "Energy", "Utilities", "Real Estate", "Industrials", "Materials"
-                    };
+        "Technology", "Financials", "Healthcare", "Consumer Staples",
+        "Consumer Discretionary", "Energy", "Utilities", "Real Estate", "Industrials", "Materials", "CANCEL" // Додали системний CANCEL
+    };
 
                     var localizedSectors = new List<string> {
-                        LocalizationManager.Get("SecTech"),
-                        LocalizationManager.Get("SecFinance"),
-                        LocalizationManager.Get("SecHealth"),
-                        LocalizationManager.Get("SecStaples"),
-                        LocalizationManager.Get("SecDiscretionary"),
-                        LocalizationManager.Get("SecEnergy"),
-                        LocalizationManager.Get("SecUtilities"),
-                        LocalizationManager.Get("SecRealEstate"),
-                        LocalizationManager.Get("SecIndustrials"),
-                        LocalizationManager.Get("SecMaterials")
-                    };
+        LocalizationManager.Get("SecTech"),
+        LocalizationManager.Get("SecFinance"),
+        LocalizationManager.Get("SecHealth"),
+        LocalizationManager.Get("SecStaples"),
+        LocalizationManager.Get("SecDiscretionary"),
+        LocalizationManager.Get("SecEnergy"),
+        LocalizationManager.Get("SecUtilities"),
+        LocalizationManager.Get("SecRealEstate"),
+        LocalizationManager.Get("SecIndustrials"),
+        LocalizationManager.Get("SecMaterials"),
+        $"[ {LocalizationManager.Get("Cancel")} ]" // Кнопка відміни в самому кінці
+    };
 
+                    // 2. Вибір сектора
                     int sectorChoice = ConsoleHelper.SelectOption(LocalizationManager.Get("SelectSector"), localizedSectors);
                     string sector = systemSectors[sectorChoice];
 
-                    decimal price = ReadDecimalInput(LocalizationManager.Get("EnterPrice"));
-                    int shares = ReadIntInput(LocalizationManager.Get("EnterShares"));
-                    decimal divYield = ReadDecimalInput(LocalizationManager.Get("EnterYield"));
-                    decimal peRatio = ReadDecimalInput(LocalizationManager.Get("EnterPE"));
+                    if (sector == "CANCEL") continue; // Вихід в меню
 
-                    var newStock = new DividendStock(ticker, sector, price, shares, divYield, peRatio);
+                    // 3. Ввід числових даних
+                    decimal? price = ReadDecimalInput(LocalizationManager.Get("EnterPrice"));
+                    if (price == null) continue;
+
+                    int? shares = ReadIntInput(LocalizationManager.Get("EnterShares"));
+                    if (shares == null) continue;
+
+                    decimal? divYield = ReadDecimalInput(LocalizationManager.Get("EnterYield"));
+                    if (divYield == null) continue;
+
+                    decimal? peRatio = ReadDecimalInput(LocalizationManager.Get("EnterPE"));
+                    if (peRatio == null) continue;
+
+                    // Якщо все введено успішно, додаємо акцію
+                    // Зверніть увагу на .Value для числових типів, оскільки вони тепер nullable (?)
+                    var newStock = new DividendStock(ticker, sector, price.Value, shares.Value, divYield.Value, peRatio.Value);
                     portfolioManager.AddStock(newStock);
 
                     Console.ForegroundColor = ConsoleColor.Green;
@@ -292,9 +297,15 @@ namespace SmartDividendTracker
                     Console.ResetColor();
 
                     Console.ForegroundColor = ConsoleColor.DarkYellow;
-                    Console.Write(LocalizationManager.Get("ClearConfirm"));
+                    Console.Write($"{LocalizationManager.Get("ClearConfirm")} ({LocalizationManager.Get("CancelHint")}): ");
                     Console.ResetColor();
+
                     string confirmation = Console.ReadLine()?.Trim().ToUpper() ?? "";
+
+                    if (string.IsNullOrEmpty(confirmation))
+                    {
+                        continue;
+                    }
 
                     if (confirmation == "YES" || confirmation == "ТАК")
                     {
@@ -321,12 +332,18 @@ namespace SmartDividendTracker
             }
         }
 
-        private static decimal ReadDecimalInput(string prompt)
+        private static decimal? ReadDecimalInput(string prompt)
         {
             while (true)
             {
-                Console.Write(prompt);
-                string input = Console.ReadLine()?.Replace(",", ".") ?? "";
+                // Додаємо підказку про відміну
+                Console.Write($"{prompt} ({LocalizationManager.Get("CancelHint")}): ");
+                string input = Console.ReadLine()?.Trim().Replace(",", ".") ?? "";
+
+                // Якщо користувач просто натиснув Enter - перериваємо ввід
+                if (string.IsNullOrEmpty(input))
+                    return null;
+
                 if (decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal value) && value >= 0)
                     return value;
 
@@ -336,12 +353,16 @@ namespace SmartDividendTracker
             }
         }
 
-        private static int ReadIntInput(string prompt)
+        private static int? ReadIntInput(string prompt)
         {
             while (true)
             {
-                Console.Write(prompt);
-                string input = Console.ReadLine() ?? "";
+                Console.Write($"{prompt} ({LocalizationManager.Get("CancelHint")}): ");
+                string input = Console.ReadLine()?.Trim() ?? "";
+
+                if (string.IsNullOrEmpty(input))
+                    return null;
+
                 if (int.TryParse(input, out int value) && value > 0)
                     return value;
 

@@ -91,13 +91,29 @@ namespace SmartDividendTracker.Services
             Console.WriteLine("=========================================================\n");
             Console.ResetColor();
 
-            Console.Write(isUa ? " Назви свою ціль (напр. Квартира): " : " Name your goal (e.g. Apartment): ");
-            string goalName = Console.ReadLine()?.Trim() ?? (isUa ? "Ціль" : "Goal");
-            if (string.IsNullOrEmpty(goalName)) goalName = isUa ? "Ціль" : "Goal";
+            Console.Write(isUa
+                ? $" Назви свою ціль (напр. Квартира) ({LocalizationManager.Get("CancelHint")}): "
+                : $" Name your goal (e.g. Apartment) ({LocalizationManager.Get("CancelHint")}): ");
 
-            decimal currentPrice = GetInput(isUa ? "1. Ціна твоєї цілі сьогодні ($): " : "1. Current cost of your goal ($): ");
-            int years = (int)GetInput(isUa ? "2. Через скільки років плануєш купівлю: " : "2. Target horizon (years): ");
-            decimal annualReturn = GetInput(isUa ? "3. Очікувана річна дохідність інвестицій (%): " : "3. Expected annual return (%): ");
+            string goalName = Console.ReadLine()?.Trim() ?? "";
+            
+            if (string.IsNullOrEmpty(goalName))
+            {
+                return;
+            }
+
+
+            decimal? currentPriceInput = GetInput(isUa ? "1. Ціна твоєї цілі сьогодні ($): " : "1. Current cost of your goal ($): ");
+            if (currentPriceInput == null) return;
+            decimal currentPrice = currentPriceInput.Value;
+
+            decimal? yearsInput = GetInput(isUa ? "2. Через скільки років плануєш купівлю: " : "2. Target horizon (years): ");
+            if (yearsInput == null) return;
+            int years = (int)yearsInput.Value;
+
+            decimal? returnInput = GetInput(isUa ? "3. Очікувана річна дохідність інвестицій (%): " : "3. Expected annual return (%): ");
+            if (returnInput == null) return;
+            decimal annualReturn = returnInput.Value;
 
             double inflationRate = 0.0214;
             double futurePrice = (double)currentPrice * Math.Pow(1 + inflationRate, years);
@@ -254,13 +270,19 @@ namespace SmartDividendTracker.Services
             return "років";
         }
 
-        private static decimal GetInput(string prompt)
+        private static decimal? GetInput(string prompt, bool allowCancel = false)
         {
             while (true)
             {
-                Console.Write(prompt);
-                string input = Console.ReadLine()?.Replace(",", ".") ?? "";
-                if (decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal value) && value >= 0)
+                string hint = allowCancel ? $" ({LocalizationManager.Get("CancelHint")})" : "";
+                Console.Write($"{prompt}{hint}: ");
+
+                string input = Console.ReadLine()?.Trim().Replace(",", ".") ?? "";
+
+                if (string.IsNullOrEmpty(input) && allowCancel)
+                    return null;
+
+                if (!string.IsNullOrEmpty(input) && decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal value) && value >= 0)
                     return value;
 
                 Console.ForegroundColor = ConsoleColor.Red;

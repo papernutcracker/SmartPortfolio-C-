@@ -1,11 +1,11 @@
 [
   {
-    "DividendYield": 4,
+    "DividendYield": 5,
     "PeRatio": 5,
-    "Ticker": "\u041E\u041F\u0410",
-    "Sector": "Healthcare",
-    "AveragePrice": 6,
-    "Shares": 7,
-    "TotalValue": 42
+    "Ticker": "",
+    "Sector": "Technology",
+    "AveragePrice": 45,
+    "Shares": 5,
+    "TotalValue": 225
   }
 ]
