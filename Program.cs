@@ -189,52 +189,41 @@ namespace SmartDividendTracker
                     Console.WriteLine("=======================================\n");
                     Console.ResetColor();
 
-                    // 1. Ввід тікера з можливістю виходу
+                    // 1. Ввід тікера з можливістю виходу (ЄДИНИЙ ДОЗВІЛ НА ENTER)
                     Console.Write($"{LocalizationManager.Get("EnterTicker")} ({LocalizationManager.Get("CancelHint")}): ");
                     string ticker = Console.ReadLine()?.Trim().ToUpper() ?? "";
                     if (string.IsNullOrEmpty(ticker)) continue; // Вихід в меню
 
+                    // 2. Вибір сектора (прибрали кнопку CANCEL)
                     var systemSectors = new List<string> {
-        "Technology", "Financials", "Healthcare", "Consumer Staples",
-        "Consumer Discretionary", "Energy", "Utilities", "Real Estate", "Industrials", "Materials", "CANCEL" // Додали системний CANCEL
-    };
+                        "Technology", "Financials", "Healthcare", "Consumer Staples",
+                        "Consumer Discretionary", "Energy", "Utilities", "Real Estate", "Industrials", "Materials"
+                    };
 
                     var localizedSectors = new List<string> {
-        LocalizationManager.Get("SecTech"),
-        LocalizationManager.Get("SecFinance"),
-        LocalizationManager.Get("SecHealth"),
-        LocalizationManager.Get("SecStaples"),
-        LocalizationManager.Get("SecDiscretionary"),
-        LocalizationManager.Get("SecEnergy"),
-        LocalizationManager.Get("SecUtilities"),
-        LocalizationManager.Get("SecRealEstate"),
-        LocalizationManager.Get("SecIndustrials"),
-        LocalizationManager.Get("SecMaterials"),
-        $"[ {LocalizationManager.Get("Cancel")} ]" // Кнопка відміни в самому кінці
-    };
+                        LocalizationManager.Get("SecTech"),
+                        LocalizationManager.Get("SecFinance"),
+                        LocalizationManager.Get("SecHealth"),
+                        LocalizationManager.Get("SecStaples"),
+                        LocalizationManager.Get("SecDiscretionary"),
+                        LocalizationManager.Get("SecEnergy"),
+                        LocalizationManager.Get("SecUtilities"),
+                        LocalizationManager.Get("SecRealEstate"),
+                        LocalizationManager.Get("SecIndustrials"),
+                        LocalizationManager.Get("SecMaterials")
+                    };
 
-                    // 2. Вибір сектора
                     int sectorChoice = ConsoleHelper.SelectOption(LocalizationManager.Get("SelectSector"), localizedSectors);
                     string sector = systemSectors[sectorChoice];
 
-                    if (sector == "CANCEL") continue; // Вихід в меню
-
-                    // 3. Ввід числових даних
-                    decimal? price = ReadDecimalInput(LocalizationManager.Get("EnterPrice"));
-                    if (price == null) continue;
-
-                    int? shares = ReadIntInput(LocalizationManager.Get("EnterShares"));
-                    if (shares == null) continue;
-
-                    decimal? divYield = ReadDecimalInput(LocalizationManager.Get("EnterYield"));
-                    if (divYield == null) continue;
-
-                    decimal? peRatio = ReadDecimalInput(LocalizationManager.Get("EnterPE"));
-                    if (peRatio == null) continue;
+                    // 3. Ввід числових даних (вимагають обов'язкового вводу)
+                    decimal price = ReadDecimalInput(LocalizationManager.Get("EnterPrice"));
+                    int shares = ReadIntInput(LocalizationManager.Get("EnterShares"));
+                    decimal divYield = ReadDecimalInput(LocalizationManager.Get("EnterYield"));
+                    decimal peRatio = ReadDecimalInput(LocalizationManager.Get("EnterPE"));
 
                     // Якщо все введено успішно, додаємо акцію
-                    // Зверніть увагу на .Value для числових типів, оскільки вони тепер nullable (?)
-                    var newStock = new DividendStock(ticker, sector, price.Value, shares.Value, divYield.Value, peRatio.Value);
+                    var newStock = new DividendStock(ticker, sector, price, shares, divYield, peRatio);
                     portfolioManager.AddStock(newStock);
 
                     Console.ForegroundColor = ConsoleColor.Green;
@@ -332,20 +321,17 @@ namespace SmartDividendTracker
             }
         }
 
-        private static decimal? ReadDecimalInput(string prompt)
+        private static decimal ReadDecimalInput(string prompt)
         {
             while (true)
             {
-                // Додаємо підказку про відміну
-                Console.Write($"{prompt} ({LocalizationManager.Get("CancelHint")}): ");
+                Console.Write($"{prompt}: ");
                 string input = Console.ReadLine()?.Trim().Replace(",", ".") ?? "";
 
-                // Якщо користувач просто натиснув Enter - перериваємо ввід
-                if (string.IsNullOrEmpty(input))
-                    return null;
-
-                if (decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal value) && value >= 0)
+                if (!string.IsNullOrEmpty(input) && decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal value) && value >= 0)
+                {
                     return value;
+                }
 
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(LocalizationManager.Get("InvalidInput"));
@@ -353,18 +339,17 @@ namespace SmartDividendTracker
             }
         }
 
-        private static int? ReadIntInput(string prompt)
+        private static int ReadIntInput(string prompt)
         {
             while (true)
             {
-                Console.Write($"{prompt} ({LocalizationManager.Get("CancelHint")}): ");
+                Console.Write($"{prompt}: ");
                 string input = Console.ReadLine()?.Trim() ?? "";
 
-                if (string.IsNullOrEmpty(input))
-                    return null;
-
-                if (int.TryParse(input, out int value) && value > 0)
+                if (!string.IsNullOrEmpty(input) && int.TryParse(input, out int value) && value > 0)
+                {
                     return value;
+                }
 
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(LocalizationManager.Get("InvalidInput"));

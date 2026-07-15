@@ -60,7 +60,6 @@ namespace SmartDividendTracker.Services
             { "AddStock", ("Add New Asset", "Додати новий актив") },
             { "ViewAssets", ("View All Assets", "Переглянути всі активи") },
             { "RemoveStock", ("Remove Asset", "Видалити актив") },
-            { "EnterTicker", ("Enter Ticker (e.g., AAPL, KO): ", "Введіть тикер (напр., AAPL, KO): ") },
             { "SelectSector", ("Select Sector", "Оберіть сектор економіки") },
             { "EnterPrice", ("Enter Average Price ($): ", "Введіть середню ціну ($): ") },
             { "EnterShares", ("Enter Quantity of Shares: ", "Введіть кількість акцій: ") },
@@ -171,6 +170,10 @@ namespace SmartDividendTracker.Services
             { "GoalDelCancel", ("[ Cancel Action ]", "[ Скасувати дію ]") },
             { "GoalDelPrompt", ("Select a financial goal to delete:", "Оберіть фінансову ціль, яку бажаєте видалити:") },
             { "GoalDelSuccess", ("\n✔ Goal \"{0}\" has been successfully removed!", "\n✔ Ціль «{0}» успішно видалено з твого профілю!") },
+
+            { "EnterTicker", ("Enter stock ticker", "Введіть тікер акції") },
+
+
         };
 
         public static string Get(string key)

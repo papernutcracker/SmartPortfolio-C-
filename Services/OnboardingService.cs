@@ -1,33 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
+using System.Linq;
 using SmartDividendTracker.Models;
+using SmartDividendTracker.Data; // Підключаємо нашу базу даних
 
 namespace SmartDividendTracker.Services
 {
     public class OnboardingService
     {
-        private readonly string _filePath = "user_profile.json";
-
         public UserProfile RunOrLoadProfile()
         {
-            if (File.Exists(_filePath))
+            // Звертаємося до бази даних замість JSON-файлу
+            using (var db = new AppDbContext())
             {
-                try
+                // Беремо першого користувача з таблиці (адже це локальний додаток)
+                var profile = db.Users.FirstOrDefault();
+
+                if (profile != null)
                 {
-                    string json = File.ReadAllText(_filePath);
-                    var profile = JsonSerializer.Deserialize<UserProfile>(json);
-                    if (profile != null)
-                    {
-                        return profile;
-                    }
-                }
-                catch (Exception)
-                {
+                    return profile;
                 }
             }
 
+            // Якщо таблиця порожня (користувача немає), запускаємо онбординг
             return RunNewOnboarding();
         }
 
@@ -78,9 +73,22 @@ namespace SmartDividendTracker.Services
 
         public void SaveProfile(UserProfile profile)
         {
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string json = JsonSerializer.Serialize(profile, options);
-            File.WriteAllText(_filePath, json);
+            using (var db = new AppDbContext())
+            {
+                // Якщо Id == 0, значить цього профілю ще немає в базі, його треба додати
+                if (profile.Id == 0)
+                {
+                    db.Users.Add(profile);
+                }
+                else
+                {
+                    // Якщо Id вже є, значить ми просто оновлюємо існуючий рядок у таблиці
+                    db.Users.Update(profile);
+                }
+
+                // Зберігаємо зміни
+                db.SaveChanges();
+            }
         }
 
         public void OpenSettings(UserProfile profile)
@@ -110,11 +118,11 @@ namespace SmartDividendTracker.Services
                 if (choice == 0)
                 {
                     profile.Language = profile.Language == "UA" ? "EN" : "UA";
-                    SaveProfile(profile); 
+                    SaveProfile(profile);
 
                     LocalizationManager.SetLanguage(profile.Language == "UA" ? "uk" : "en");
                 }
-                else if (choice == 1) 
+                else if (choice == 1)
                 {
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Red;
@@ -132,7 +140,7 @@ namespace SmartDividendTracker.Services
                 }
                 else if (choice == 2)
                 {
-                    break; 
+                    break;
                 }
             }
         }
@@ -157,9 +165,21 @@ namespace SmartDividendTracker.Services
 
             if (confirmChoice == 1)
             {
-                if (File.Exists(_filePath))
+                // ОЧИЩЕННЯ БАЗИ ДАНИХ
+                using (var db = new AppDbContext())
                 {
-                    File.Delete(_filePath);
+                    db.Users.RemoveRange(db.Users);   // Видаляємо всі профілі
+                    db.Stocks.RemoveRange(db.Stocks); // Видаляємо всі прив'язані акції
+                    db.Goals.RemoveRange(db.Goals);   // Видаляємо цілі (якщо вони вже в БД)
+
+                    db.SaveChanges(); // Підтверджуємо масове видалення
+                }
+
+                // Також на всяк випадок видаляємо старий JSON файл, щоб він не плутав нас
+                string oldFilePath = "user_profile.json";
+                if (System.IO.File.Exists(oldFilePath))
+                {
+                    System.IO.File.Delete(oldFilePath);
                 }
 
                 Console.Clear();

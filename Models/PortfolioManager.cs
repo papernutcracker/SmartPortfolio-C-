@@ -1,70 +1,105 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
+using System.Linq;
+using SmartDividendTracker.Data;
 using SmartDividendTracker.Models;
 
 namespace SmartDividendTracker.Services
 {
     public class PortfolioManager
     {
-        private readonly string _filePath = "portfolio.json";
-        private List<DividendStock> _stocks = new();
-
-        public PortfolioManager()
+        // 1. Метод отримання всіх акцій (читає прямо з SQL Server)
+        public List<DividendStock> GetAllStocks()
         {
-            LoadPortfolio();
+            using (var db = new AppDbContext())
+            {
+                return db.Stocks.ToList();
+            }
         }
 
-        public List<DividendStock> GetAllStocks() => _stocks;
-
+        // 2. Метод додавання (або оновлення) акції
         public void AddStock(DividendStock stock)
         {
-            var existing = _stocks.Find(s => s.Ticker.Equals(stock.Ticker, StringComparison.OrdinalIgnoreCase));
-            if (existing != null)
+            using (var db = new AppDbContext())
             {
-                int totalShares = existing.Shares + stock.Shares;
-                existing.AveragePrice = ((existing.AveragePrice * existing.Shares) + (stock.AveragePrice * stock.Shares)) / totalShares;
-                existing.Shares = totalShares;
-                existing.DividendYield = stock.DividendYield; 
-                existing.PeRatio = stock.PeRatio;
-            }
-            else
-            {
-                _stocks.Add(stock);
-            }
+                // Шукаємо, чи є вже така акція в базі (порівнюємо тікери)
+                var existing = db.Stocks.FirstOrDefault(s => s.Ticker.ToLower() == stock.Ticker.ToLower());
 
-            SavePortfolio();
+                if (existing != null)
+                {
+                    // Якщо є — оновлюємо її середню ціну та кількість
+                    int totalShares = existing.Shares + stock.Shares;
+                    existing.AveragePrice = ((existing.AveragePrice * existing.Shares) + (stock.AveragePrice * stock.Shares)) / totalShares;
+                    existing.Shares = totalShares;
+                    existing.DividendYield = stock.DividendYield;
+                    existing.PeRatio = stock.PeRatio;
+                }
+                else
+                {
+                    // Якщо немає — додаємо як нову
+                    db.Stocks.Add(stock);
+                }
+
+                // Зберігаємо зміни в базу даних
+                db.SaveChanges();
+            }
         }
 
+        // 3. Метод видалення акції
         public void RemoveStock(string ticker)
         {
-            _stocks.RemoveAll(s => s.Ticker.Equals(ticker, StringComparison.OrdinalIgnoreCase));
-            SavePortfolio();
+            using (var db = new AppDbContext())
+            {
+                var stockToRemove = db.Stocks.FirstOrDefault(s => s.Ticker.ToLower() == ticker.ToLower());
+                if (stockToRemove != null)
+                {
+                    db.Stocks.Remove(stockToRemove);
+                    db.SaveChanges();
+                }
+            }
         }
 
+        // 4. Метод повного очищення портфеля (видаляє всі рядки з таблиці Stocks)
         public void ClearAll()
         {
-            _stocks.Clear();
-            SavePortfolio();
+            using (var db = new AppDbContext())
+            {
+                db.Stocks.RemoveRange(db.Stocks);
+                db.SaveChanges();
+            }
         }
 
+        // 5. Отримання загальної вартості (рахуємо з бази)
         public decimal GetTotalPortfolioValue()
         {
-            decimal total = 0;
-            foreach (var stock in _stocks) total += stock.TotalValue;
-            return total;
+            using (var db = new AppDbContext())
+            {
+                decimal total = 0;
+                foreach (var stock in db.Stocks) total += stock.TotalValue;
+                return total;
+            }
         }
 
+        // 6. Отримання річного доходу (рахуємо з бази)
         public decimal GetTotalAnnualIncome()
         {
-            decimal total = 0;
-            foreach (var stock in _stocks) total += stock.CalculateAnnualDividend();
-            return total;
+            using (var db = new AppDbContext())
+            {
+                decimal total = 0;
+                foreach (var stock in db.Stocks) total += stock.CalculateAnnualDividend();
+                return total;
+            }
         }
 
+        // 7. Виведення діаграми
         public void PrintSectorDiversification(bool isUa)
         {
+            List<DividendStock> stocks;
+            using (var db = new AppDbContext())
+            {
+                stocks = db.Stocks.ToList(); // Беремо всі акції для аналізу
+            }
+
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("=========================================================");
@@ -72,7 +107,7 @@ namespace SmartDividendTracker.Services
             Console.WriteLine("=========================================================\n");
             Console.ResetColor();
 
-            decimal totalValue = GetTotalPortfolioValue();
+            decimal totalValue = stocks.Sum(s => s.TotalValue);
 
             if (totalValue == 0)
             {
@@ -83,9 +118,9 @@ namespace SmartDividendTracker.Services
             }
 
             var sectorGroups = new Dictionary<string, decimal>();
-            foreach (var stock in _stocks)
+            foreach (var stock in stocks)
             {
-                string sector = stock.Sector;
+                string sector = stock.Sector ?? "Unknown";
                 if (isUa)
                 {
                     sector = sector switch
@@ -113,7 +148,7 @@ namespace SmartDividendTracker.Services
             foreach (var group in sectorGroups)
             {
                 decimal pct = (group.Value / totalValue) * 100;
-                int barLength = (int)(pct / 4); // 1 кубик "█" = 4% ширини екрана
+                int barLength = (int)(pct / 4);
 
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.Write($"{group.Key,-22}: ");
@@ -126,37 +161,6 @@ namespace SmartDividendTracker.Services
 
                 Console.ResetColor();
                 Console.WriteLine($" {pct:F1}% (${group.Value:F2})");
-            }
-        }
-
-        private void SavePortfolio()
-        {
-            try
-            {
-                var options = new JsonSerializerOptions { WriteIndented = true };
-                string json = JsonSerializer.Serialize(_stocks, options);
-                File.WriteAllText(_filePath, json);
-            }
-            catch (Exception) {}
-        }
-
-        private void LoadPortfolio()
-        {
-            if (File.Exists(_filePath))
-            {
-                ConsoleHelper.ShowSpinner(LocalizationManager.GetCurrentLanguage() == "uk"
-                    ? "Зчитуємо дані портфеля з JSON..."
-                    : "Reading portfolio data from JSON...");
-                try
-                {
-                    string json = File.ReadAllText(_filePath);
-                    var data = JsonSerializer.Deserialize<List<DividendStock>>(json);
-                    if (data != null) _stocks = data;
-                }
-                catch (Exception)
-                {
-                    _stocks = new List<DividendStock>();
-                }
             }
         }
     }
