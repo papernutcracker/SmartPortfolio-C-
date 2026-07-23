@@ -1,4 +1,5 @@
 ﻿using System;
+using Smart_Dividend_Portfolio_Tracker.Services;
 using SmartDividendTracker.Models;
 
 namespace SmartDividendTracker.Services

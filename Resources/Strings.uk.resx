@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<!-- 
+		Microsoft ResX Schema
+
+		Version 1.3
+
+		The primary goals of this format is to allow a simple XML format 
+		that is mostly human readable. The generation and parsing of the 
+		various data types are done through the TypeConverter classes 
+		associated with the data types.
+
+		Example:
+
+		... ado.net/XML headers & schema ...
+		<resheader name="resmimetype">text/microsoft-resx</resheader>
+		<resheader name="version">1.3</resheader>
+		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+		<data name="Name1">this is my long string</data>
+		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+			[base64 mime encoded serialized .NET Framework object]
+		</data>
+		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+			[base64 mime encoded string representing a byte array form of the .NET Framework object]
+		</data>
+
+		There are any number of "resheader" rows that contain simple 
+		name/value pairs.
+
+		Each data row contains a name, and value. The row also contains a 
+		type or mimetype. Type corresponds to a .NET class that support 
+		text/value conversion through the TypeConverter architecture. 
+		Classes that don't support this are serialized and stored with the 
+		mimetype set.
+
+		The mimetype is used for serialized objects, and tells the 
+		ResXResourceReader how to depersist the object. This is currently not 
+		extensible. For a given mimetype the value must be set accordingly:
+
+		Note - application/x-microsoft.net.object.binary.base64 is the format 
+		that the ResXResourceWriter will generate, however the reader can 
+		read any of the formats listed below.
+
+		mimetype: application/x-microsoft.net.object.binary.base64
+		value   : The object must be serialized with 
+			: System.Serialization.Formatters.Binary.BinaryFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.soap.base64
+		value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.bytearray.base64
+		value   : The object must be serialized into a byte array 
+			: using a System.ComponentModel.TypeConverter
+			: and then encoded with base64 encoding.
+	-->
+	
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>1.3</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+
+	<data name="SelectLang" xml:space="preserve"><value>Оберіть вашу мову</value></data>
+	<data name="Welcome" xml:space="preserve"><value>Ласкаво просимо до Smart Dividend Tracker AI!</value></data>
+	<data name="ExpLevel" xml:space="preserve"><value>Який ваш досвід інвестування?</value></data>
+	<data name="ExpBeginner" xml:space="preserve"><value>Новачок (Тільки починаю)</value></data>
+	<data name="ExpPro" xml:space="preserve"><value>Досвідчений</value></data>
+	<data name="GoalInfo" xml:space="preserve"><value>Введіть вашу головну мету (напр., Пасивний дохід): </value></data>
+	<data name="HorizonPrompt" xml:space="preserve"><value>Оберіть ваш термін інвестування</value></data>
+	<data name="Horiz5" xml:space="preserve"><value>До 5 років</value></data>
+	<data name="ViewSectorChart" xml:space="preserve"><value>Переглянути діаграму часток</value></data>
+	<data name="Horiz10" xml:space="preserve"><value>До 10 років</value></data>
+	<data name="HorizMore" xml:space="preserve"><value>Більше 10 років</value></data>
+	<data name="HasPort" xml:space="preserve"><value>Чи є у вас вже інвестиційний портфель?</value></data>
+	<data name="Yes" xml:space="preserve"><value>Так</value></data>
+	<data name="No" xml:space="preserve"><value>Ні</value></data>
+	<data name="ProfileSaved" xml:space="preserve"><value>Профіль успішно збережено! Починаємо.</value></data>
+	<data name="MainMenu" xml:space="preserve"><value>ГОЛОВНЕ МЕНЮ</value></data>
+	<data name="MenuOpt1" xml:space="preserve"><value>Переглянути портфель</value></data>
+	<data name="MenuOpt2" xml:space="preserve"><value>Шпаргалка новачка</value></data>
+	<data name="MenuOpt3" xml:space="preserve"><value>Вихід</value></data>
+	<data name="GoalPrompt" xml:space="preserve"><value>Оберіть вашу головну мету інвестування</value></data>
+	<data name="GoalPassive" xml:space="preserve"><value>Пасивний дохід (Дивіденди)</value></data>
+	<data name="GoalGrowth" xml:space="preserve"><value>Збільшення капіталу</value></data>
+	<data name="GoalPurchase" xml:space="preserve"><value>Велика покупка (Нерухомість тощо)</value></data>
+	<data name="GoalRemovedWarning" xml:space="preserve"><value>Увага: Мету 'Пасивний дохід' вилучено, оскільки це ризиковано для горизонту до 5 років.</value></data>
+	<data name="MenuOpt4" xml:space="preserve"><value>Налаштування профілю</value></data>
+	<data name="SettingsTitle" xml:space="preserve"><value>НАЛАШТУВАННЯ</value></data>
+	<data name="ChangeLang" xml:space="preserve"><value>Змінити мову</value></data>
+	<data name="ChangeExp" xml:space="preserve"><value>Змінити рівень досвіду</value></data>
+	<data name="ChangeHorizon" xml:space="preserve"><value>Змінити горизонт інвестування</value></data>
+	<data name="ResetTutorial" xml:space="preserve"><value>Скинути навчання (Туторіал)</value></data>
+	<data name="TutResetSuccess" xml:space="preserve"><value>Статус навчання скинуто! Воно запуститься при наступному старті.</value></data>
+	<data name="SettingsMenu" xml:space="preserve"><value>НАЛАШТУВАННЯ ПРОФІЛЮ</value></data>
+	<data name="SetGoals" xml:space="preserve"><value>Змінити цілі інвестування</value></data>
+	<data name="Back" xml:space="preserve"><value>Назад до головного меню</value></data>
+	<data name="ExitMessage" xml:space="preserve"><value>Зберігаємо прогрес... До зустрічі, Інвесторе!</value></data>
+	<data name="PortfolioMenu" xml:space="preserve"><value>УПРАВЛІННЯ ПОРТФЕЛЕМ</value></data>
+	<data name="AddStock" xml:space="preserve"><value>Додати новий актив</value></data>
+	<data name="ViewAssets" xml:space="preserve"><value>Переглянути всі активи</value></data>
+	<data name="RemoveStock" xml:space="preserve"><value>Видалити актив</value></data>
+	<data name="SelectSector" xml:space="preserve"><value>Оберіть сектор економіки</value></data>
+	<data name="EnterPrice" xml:space="preserve"><value>Введіть середню ціну ($): </value></data>
+	<data name="EnterShares" xml:space="preserve"><value>Введіть кількість акцій: </value></data>
+	<data name="EnterYield" xml:space="preserve"><value>Введіть дивідендну дохідність (%): </value></data>
+	<data name="EnterPE" xml:space="preserve"><value>Введіть показник P/E: </value></data>
+	<data name="InvalidInput" xml:space="preserve"><value>Некоректний ввід. Будь ласка, введіть число.</value></data>
+	<data name="StockAdded" xml:space="preserve"><value>Актив успішно додано до портфеля!</value></data>
+	<data name="TblTicker" xml:space="preserve"><value>Тикер</value></data>
+	<data name="TblSector" xml:space="preserve"><value>Сектор</value></data>
+	<data name="TblPrice" xml:space="preserve"><value>Ціна</value></data>
+	<data name="TblShares" xml:space="preserve"><value>К-ть</value></data>
+	<data name="TblValue" xml:space="preserve"><value>Вартість</value></data>
+	<data name="TblYield" xml:space="preserve"><value>Дохідн.</value></data>
+	<data name="TblAnnualDiv" xml:space="preserve"><value>Див/Рік</value></data>
+	<data name="TotalIncome" xml:space="preserve"><value>Загальний річний дивідендний дохід:</value></data>
+	<data name="EmptyPort" xml:space="preserve"><value>Ваш портфель порожній. Додайте активи!</value></data>
+	<data name="SelectToRemove" xml:space="preserve"><value>Оберіть актив для видалення</value></data>
+	<data name="StockRemoved" xml:space="preserve"><value>Актив успішно видалено!</value></data>
+	<data name="CalcMenuTitle" xml:space="preserve"><value>МАГІЯ СКЛАДНОГО ВІДСОТКА</value></data>
+	<data name="EnterMonthly" xml:space="preserve"><value>Скільки ви можете відкладати щомісяця? ($): </value></data>
+	<data name="EnterRate" xml:space="preserve"><value>Очікувана річна дохідність (%, зазвичай 8-10%): </value></data>
+	<data name="Year" xml:space="preserve"><value>Рік</value></data>
+	<data name="Invested" xml:space="preserve"><value>Ви вклали</value></data>
+	<data name="TotalValue" xml:space="preserve"><value>Капітал</value></data>
+	<data name="EnterInflation" xml:space="preserve"><value>Очікувана інфляція (%, за замовчуванням 3%): </value></data>
+	<data name="NominalValue" xml:space="preserve"><value>Номінал ($)</value></data>
+	<data name="RealValue" xml:space="preserve"><value>Реальна вартість</value></data>
+	<data name="InflationNote" xml:space="preserve"><value>*Реальна вартість показує купівельну спроможність у СЬОГОДНІШНІХ цінах.</value></data>
+	<data name="EnterEndDate" xml:space="preserve"><value>Введіть кінцеву дату (дд.ММ.рррр, за замовчуванням +10 років): </value></data>
+	<data name="InvalidDate" xml:space="preserve"><value>Некоректна дата або дата в минулому. Використовуйте дд.ММ.рррр</value></data>
+	<data name="MenuOpt5" xml:space="preserve"><value>Калькулятор капіталу</value></data>
+	<data name="EduMenuTitle" xml:space="preserve"><value>Навчальний центр</value></data>
+	<data name="CheatSheetOpt" xml:space="preserve"><value>Шпаргалка термінів</value></data>
+	<data name="CalcOpt" xml:space="preserve"><value>Калькулятор складного відсотка</value></data>
+	<data name="TutWelcome" xml:space="preserve"><value>Вітаємо, майбутній інвесторе! Почнемо вашу фінансову подорож.</value></data>
+	<data name="TutStep1" xml:space="preserve"><value>Інвестування — як посадка дерева. Чим раніше почнеш, тим більшим воно виросте.</value></data>
+	<data name="TutReady" xml:space="preserve"><value>Чудово! Ви готові. Переходимо до Головного Меню.</value></data>
+	<data name="PressEnter" xml:space="preserve"><value>Натисніть ENTER для продовження...</value></data>
+	<data name="ClearPortfolio" xml:space="preserve"><value>Очистити весь портфель</value></data>
+	<data name="PortfolioCleared" xml:space="preserve"><value>Портфель повністю очищено!</value></data>
+	<data name="MenuOptGoalCalc" xml:space="preserve"><value>Калькулятор фінансової цілі</value></data>
+	<data name="ClearConfirm" xml:space="preserve"><value>Ви впевнені? Введіть ТАК для підтвердження: </value></data>
+	<data name="ClearCanceled" xml:space="preserve"><value>Дію скасовано. Твій портфель залишається в повній безпеці.</value></data>
+	<data name="SecTech" xml:space="preserve"><value>Технології</value></data>
+	<data name="SecFinance" xml:space="preserve"><value>Фінанси</value></data>
+	<data name="SecHealth" xml:space="preserve"><value>Охорона здоров'я</value></data>
+	<data name="SecStaples" xml:space="preserve"><value>Товари першої необхідності</value></data>
+	<data name="SecDiscretionary" xml:space="preserve"><value>Споживчі товари</value></data>
+	<data name="SecEnergy" xml:space="preserve"><value>Енергетика</value></data>
+	<data name="SecUtilities" xml:space="preserve"><value>Комунальні послуги</value></data>
+	<data name="SecRealEstate" xml:space="preserve"><value>Нерухомість</value></data>
+	<data name="SecIndustrials" xml:space="preserve"><value>Промисловість</value></data>
+	<data name="SecMaterials" xml:space="preserve"><value>Матеріали</value></data>
+	<data name="CancelHint" xml:space="preserve"><value>Натисніть Enter для відміни</value></data>
+	<data name="Cancel" xml:space="preserve"><value>Відміна</value></data>
+	<data name="CompoundCalc" xml:space="preserve"><value>Калькулятор складного відсотка</value></data>
+	<data name="CalcInitial" xml:space="preserve"><value>Початковий капітал</value></data>
+	<data name="CalcMonthly" xml:space="preserve"><value>Щомісячне поповнення</value></data>
+	<data name="CalcRate" xml:space="preserve"><value>Очікувана річна дохідність (%)</value></data>
+	<data name="CalcYears" xml:space="preserve"><value>Термін інвестування (років)</value></data>
+	<data name="GoalMenuHeader" xml:space="preserve"><value>  🎯 МЕНЕДЖЕР ФІНАНСОВИХ ЦІЛЕЙ</value></data>
+	<data name="GoalMenuOpt1" xml:space="preserve"><value>1. Розрахувати та зберегти нову ціль</value></data>
+	<data name="GoalMenuOpt2" xml:space="preserve"><value>2. Переглянути мої цілі</value></data>
+	<data name="GoalMenuOpt3" xml:space="preserve"><value>3. Видалити фінансову ціль</value></data>
+	<data name="GoalMenuOpt4" xml:space="preserve"><value>4. Повернутися в головне меню</value></data>
+	<data name="GoalHowItWorks" xml:space="preserve"><value>         ЯК ПРАЦЮЄ АЛГОРИТМ ПЛАНУВАННЯ ЦІЛІ             </value></data>
+	<data name="GoalStep1Title" xml:space="preserve"><value>📌 Крок 1. Дізнайся 'реальну' ціну через роки (з інфляцією)</value></data>
+	<data name="GoalStep1Desc" xml:space="preserve"><value>Гроші знецінюються, тому твоя ціль через роки коштуватиме дорожче.&#xA;Як орієнтир для долара береться інфляція 2.14% річних.</value></data>
+	<data name="GoalStep2Title" xml:space="preserve"><value>📌 Крок 2. Рахуємо, скільки треба відкладати щомісяця</value></data>
+	<data name="GoalStep2Desc" xml:space="preserve"><value>Ми беремо майбутню ціну і ділимо її на коефіцієнт складного відсотка.</value></data>
+	<data name="GoalPressAnyCalc" xml:space="preserve"><value>Натисни будь-яку клавішу, щоб перейти до розрахунку...</value></data>
+	<data name="GoalNewPlanHeader" xml:space="preserve"><value>                НОВИЙ ФІНАНСОВИЙ ПЛАН ЦІЛІ               </value></data>
+	<data name="GoalNamePrompt" xml:space="preserve"><value> Назви свою ціль (напр. Квартира)</value></data>
+	<data name="GoalPricePrompt" xml:space="preserve"><value>1. Ціна твоєї цілі сьогодні ($)</value></data>
+	<data name="GoalYearsPrompt" xml:space="preserve"><value>2. Через скільки років плануєш купівлю</value></data>
+	<data name="GoalRatePrompt" xml:space="preserve"><value>3. Очікувана річна дохідність інвестицій (%)</value></data>
+	<data name="GoalCalcHeader" xml:space="preserve"><value>                   РОЗРАХУНОК ПЛАНУ                      </value></data>
+	<data name="GoalTarget" xml:space="preserve"><value>🎯 Ціль:</value></data>
+	<data name="GoalCostToday" xml:space="preserve"><value>• Вартість сьогодні:</value></data>
+	<data name="GoalCostFuture" xml:space="preserve"><value>• Вартість через {0} років (з інфляцією 2.14%):</value></data>
+	<data name="GoalReqInv" xml:space="preserve"><value>➜ НЕОБХІДНО ІНВЕСТУВАТИ ЩОМІСЯЦЯ:</value></data>
+	<data name="GoalSavePrompt" xml:space="preserve"><value>&#xA;💾 Бажаєш зберегти цю ціль у свій профіль? (ТАК/НІ): </value></data>
+	<data name="GoalSavedSuccess" xml:space="preserve"><value>&#xA;✔ Ціль успішно збережено!</value></data>
+	<data name="GoalSavedCancel" xml:space="preserve"><value>&#xA;Розрахунок завершено без збереження.</value></data>
+	<data name="GoalListHeader" xml:space="preserve"><value>                                 СПИСОК МОЇХ ФІНАНСОВИХ ЦІЛЕЙ                                     </value></data>
+	<data name="GoalListEmpty" xml:space="preserve"><value>У тебе поки немає збережених цілей. Прорахуй щось у пункті 1!</value></data>
+	<data name="TblGoalName" xml:space="preserve"><value>Назва цілі</value></data>
+	<data name="TblPriceToday" xml:space="preserve"><value>Ціна зараз</value></data>
+	<data name="TblYears" xml:space="preserve"><value>Років</value></data>
+	<data name="TblReturn" xml:space="preserve"><value>Дохідн.</value></data>
+	<data name="TblFuturePrice" xml:space="preserve"><value>Ціна майбут.</value></data>
+	<data name="TblMonthlyInv" xml:space="preserve"><value>Внесок/міс</value></data>
+	<data name="GoalDelEmpty" xml:space="preserve"><value>&#xA;У тебе немає збережених цілей для видалення.</value></data>
+	<data name="GoalYearsWord" xml:space="preserve"><value>років</value></data>
+	<data name="GoalDelCancel" xml:space="preserve"><value>[ Скасувати дію ]</value></data>
+	<data name="GoalDelPrompt" xml:space="preserve"><value>Оберіть фінансову ціль, яку бажаєте видалити:</value></data>
+	<data name="GoalDelSuccess" xml:space="preserve"><value>&#xA;✔ Ціль «{0}» успішно видалено з твого профілю!</value></data>
+	<data name="EnterTicker" xml:space="preserve"><value>Введіть тікер акції</value></data>
+	
+</root>

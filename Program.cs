@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Smart_Dividend_Portfolio_Tracker.Services;
 using SmartDividendTracker.Models;
 using SmartDividendTracker.Services;
 

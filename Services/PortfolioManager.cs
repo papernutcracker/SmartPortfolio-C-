@@ -4,7 +4,7 @@ using System.Linq;
 using SmartDividendTracker.Data;
 using SmartDividendTracker.Models;
 
-namespace SmartDividendTracker.Services
+namespace Smart_Dividend_Portfolio_Tracker.Services
 {
     public class PortfolioManager
     {

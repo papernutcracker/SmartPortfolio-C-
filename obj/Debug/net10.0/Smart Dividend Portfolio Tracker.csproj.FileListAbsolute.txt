@@ -154,3 +154,8 @@ C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\bin\Debug\net10.0\ru
 C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\bin\Debug\net10.0\runtimes\win\lib\net9.0\System.Security.Cryptography.Pkcs.dll
 C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\obj\Debug\net10.0\Smart Dividend Portfolio Tracker.csproj.AssemblyReference.cache
 C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\obj\Debug\net10.0\Smart Di.17C7305B.Up2Date
+C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\obj\Debug\net10.0\Smart_Dividend_Portfolio_Tracker.Resources.Strings.resources
+C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\obj\Debug\net10.0\Smart_Dividend_Portfolio_Tracker.Resources.Strings.uk.resources
+C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\obj\Debug\net10.0\Smart Dividend Portfolio Tracker.csproj.GenerateResource.cache
+C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\bin\Debug\net10.0\uk\Smart Dividend Portfolio Tracker.resources.dll
+C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\obj\Debug\net10.0\uk\Smart Dividend Portfolio Tracker.resources.dll

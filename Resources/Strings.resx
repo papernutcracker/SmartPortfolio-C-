@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<!-- 
+		Microsoft ResX Schema
+
+		Version 1.3
+
+		The primary goals of this format is to allow a simple XML format 
+		that is mostly human readable. The generation and parsing of the 
+		various data types are done through the TypeConverter classes 
+		associated with the data types.
+
+		Example:
+
+		... ado.net/XML headers & schema ...
+		<resheader name="resmimetype">text/microsoft-resx</resheader>
+		<resheader name="version">1.3</resheader>
+		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+		<data name="Name1">this is my long string</data>
+		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+			[base64 mime encoded serialized .NET Framework object]
+		</data>
+		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+			[base64 mime encoded string representing a byte array form of the .NET Framework object]
+		</data>
+
+		There are any number of "resheader" rows that contain simple 
+		name/value pairs.
+
+		Each data row contains a name, and value. The row also contains a 
+		type or mimetype. Type corresponds to a .NET class that support 
+		text/value conversion through the TypeConverter architecture. 
+		Classes that don't support this are serialized and stored with the 
+		mimetype set.
+
+		The mimetype is used for serialized objects, and tells the 
+		ResXResourceReader how to depersist the object. This is currently not 
+		extensible. For a given mimetype the value must be set accordingly:
+
+		Note - application/x-microsoft.net.object.binary.base64 is the format 
+		that the ResXResourceWriter will generate, however the reader can 
+		read any of the formats listed below.
+
+		mimetype: application/x-microsoft.net.object.binary.base64
+		value   : The object must be serialized with 
+			: System.Serialization.Formatters.Binary.BinaryFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.soap.base64
+		value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.bytearray.base64
+		value   : The object must be serialized into a byte array 
+			: using a System.ComponentModel.TypeConverter
+			: and then encoded with base64 encoding.
+	-->
+	
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>1.3</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+
+	<data name="SelectLang" xml:space="preserve"><value>Select your language</value></data>
+	<data name="Welcome" xml:space="preserve"><value>Welcome to Smart Dividend Tracker AI!</value></data>
+	<data name="ExpLevel" xml:space="preserve"><value>What is your investment experience?</value></data>
+	<data name="ExpBeginner" xml:space="preserve"><value>Beginner (Just starting)</value></data>
+	<data name="ExpPro" xml:space="preserve"><value>Experienced</value></data>
+	<data name="GoalInfo" xml:space="preserve"><value>Type your main investment goal (e.g., Passive Income): </value></data>
+	<data name="HorizonPrompt" xml:space="preserve"><value>Select your investment horizon</value></data>
+	<data name="Horiz5" xml:space="preserve"><value>Up to 5 years</value></data>
+	<data name="ViewSectorChart" xml:space="preserve"><value>View Sector Chart</value></data>
+	<data name="Horiz10" xml:space="preserve"><value>Up to 10 years</value></data>
+	<data name="HorizMore" xml:space="preserve"><value>More than 10 years</value></data>
+	<data name="HasPort" xml:space="preserve"><value>Do you already have an investment portfolio?</value></data>
+	<data name="Yes" xml:space="preserve"><value>Yes</value></data>
+	<data name="No" xml:space="preserve"><value>No</value></data>
+	<data name="ProfileSaved" xml:space="preserve"><value>Profile saved successfully! Let's start.</value></data>
+	<data name="MainMenu" xml:space="preserve"><value>MAIN MENU</value></data>
+	<data name="MenuOpt1" xml:space="preserve"><value>View Portfolio</value></data>
+	<data name="MenuOpt2" xml:space="preserve"><value>Beginner's Cheat Sheet</value></data>
+	<data name="MenuOpt3" xml:space="preserve"><value>Exit</value></data>
+	<data name="GoalPrompt" xml:space="preserve"><value>Select your main investment goal</value></data>
+	<data name="GoalPassive" xml:space="preserve"><value>Passive Income</value></data>
+	<data name="GoalGrowth" xml:space="preserve"><value>Capital Growth</value></data>
+	<data name="GoalPurchase" xml:space="preserve"><value>Major Purchase (Real estate, etc.)</value></data>
+	<data name="GoalRemovedWarning" xml:space="preserve"><value>Warning: 'Passive Income' goal was removed because it's too risky for a &lt;5 years horizon.</value></data>
+	<data name="MenuOpt4" xml:space="preserve"><value>Profile Settings</value></data>
+	<data name="SettingsTitle" xml:space="preserve"><value>SETTINGS</value></data>
+	<data name="ChangeLang" xml:space="preserve"><value>Change Language</value></data>
+	<data name="ChangeExp" xml:space="preserve"><value>Change Experience Level</value></data>
+	<data name="ChangeHorizon" xml:space="preserve"><value>Change Investment Horizon</value></data>
+	<data name="ResetTutorial" xml:space="preserve"><value>Reset Tutorial</value></data>
+	<data name="TutResetSuccess" xml:space="preserve"><value>Tutorial status has been reset! It will launch on next restart.</value></data>
+	<data name="SettingsMenu" xml:space="preserve"><value>PROFILE SETTINGS</value></data>
+	<data name="SetGoals" xml:space="preserve"><value>Change Investment Goals</value></data>
+	<data name="Back" xml:space="preserve"><value>Back to Main Menu</value></data>
+	<data name="ExitMessage" xml:space="preserve"><value>Saving progress... See you later, Investor!</value></data>
+	<data name="PortfolioMenu" xml:space="preserve"><value>PORTFOLIO MANAGEMENT</value></data>
+	<data name="AddStock" xml:space="preserve"><value>Add New Asset</value></data>
+	<data name="ViewAssets" xml:space="preserve"><value>View All Assets</value></data>
+	<data name="RemoveStock" xml:space="preserve"><value>Remove Asset</value></data>
+	<data name="SelectSector" xml:space="preserve"><value>Select Sector</value></data>
+	<data name="EnterPrice" xml:space="preserve"><value>Enter Average Price ($): </value></data>
+	<data name="EnterShares" xml:space="preserve"><value>Enter Quantity of Shares: </value></data>
+	<data name="EnterYield" xml:space="preserve"><value>Enter Dividend Yield (%): </value></data>
+	<data name="EnterPE" xml:space="preserve"><value>Enter P/E Ratio: </value></data>
+	<data name="InvalidInput" xml:space="preserve"><value>Invalid input. Please enter a valid number.</value></data>
+	<data name="StockAdded" xml:space="preserve"><value>Asset successfully added to portfolio!</value></data>
+	<data name="TblTicker" xml:space="preserve"><value>Ticker</value></data>
+	<data name="TblSector" xml:space="preserve"><value>Sector</value></data>
+	<data name="TblPrice" xml:space="preserve"><value>Price</value></data>
+	<data name="TblShares" xml:space="preserve"><value>Qty</value></data>
+	<data name="TblValue" xml:space="preserve"><value>Total Value</value></data>
+	<data name="TblYield" xml:space="preserve"><value>Yield</value></data>
+	<data name="TblAnnualDiv" xml:space="preserve"><value>Div/Yr</value></data>
+	<data name="TotalIncome" xml:space="preserve"><value>Total Annual Dividend Income:</value></data>
+	<data name="EmptyPort" xml:space="preserve"><value>Your portfolio is empty. Add some assets first!</value></data>
+	<data name="SelectToRemove" xml:space="preserve"><value>Select an asset to remove</value></data>
+	<data name="StockRemoved" xml:space="preserve"><value>Asset successfully removed!</value></data>
+	<data name="CalcMenuTitle" xml:space="preserve"><value>COMPOUND INTEREST MAGIC</value></data>
+	<data name="EnterMonthly" xml:space="preserve"><value>Enter your monthly contribution ($): </value></data>
+	<data name="EnterRate" xml:space="preserve"><value>Enter expected annual return (%, default 8%): </value></data>
+	<data name="Year" xml:space="preserve"><value>Year</value></data>
+	<data name="Invested" xml:space="preserve"><value>You Invested</value></data>
+	<data name="TotalValue" xml:space="preserve"><value>Portfolio Value</value></data>
+	<data name="EnterInflation" xml:space="preserve"><value>Enter expected inflation (%, default 3%): </value></data>
+	<data name="NominalValue" xml:space="preserve"><value>Nominal Value</value></data>
+	<data name="RealValue" xml:space="preserve"><value>Real Value</value></data>
+	<data name="InflationNote" xml:space="preserve"><value>*Real Value shows your purchasing power in TODAY'S money.</value></data>
+	<data name="EnterEndDate" xml:space="preserve"><value>Enter target date (dd.MM.yyyy, default +10 years): </value></data>
+	<data name="InvalidDate" xml:space="preserve"><value>Invalid format or date in the past. Use dd.MM.yyyy</value></data>
+	<data name="MenuOpt5" xml:space="preserve"><value>Compound Calculator</value></data>
+	<data name="EduMenuTitle" xml:space="preserve"><value>Education hub</value></data>
+	<data name="CheatSheetOpt" xml:space="preserve"><value>Beginner's Cheat Sheet</value></data>
+	<data name="CalcOpt" xml:space="preserve"><value>Compound Interest Calculator</value></data>
+	<data name="TutWelcome" xml:space="preserve"><value>Welcome, future investor! Let's start your financial journey.</value></data>
+	<data name="TutStep1" xml:space="preserve"><value>Investing is like planting a tree. The earlier you start, the bigger it grows.</value></data>
+	<data name="TutReady" xml:space="preserve"><value>Awesome! You are ready. Let's go to the Main Menu.</value></data>
+	<data name="PressEnter" xml:space="preserve"><value>Press ENTER to continue...</value></data>
+	<data name="ClearPortfolio" xml:space="preserve"><value>Clear Entire Portfolio</value></data>
+	<data name="PortfolioCleared" xml:space="preserve"><value>Portfolio has been completely cleared!</value></data>
+	<data name="MenuOptGoalCalc" xml:space="preserve"><value>Goal Milestone Calculator</value></data>
+	<data name="ClearConfirm" xml:space="preserve"><value>Are you sure? Type YES to confirm: </value></data>
+	<data name="ClearCanceled" xml:space="preserve"><value>Action canceled. Your portfolio remains completely safe.</value></data>
+	<data name="SecTech" xml:space="preserve"><value>Technology</value></data>
+	<data name="SecFinance" xml:space="preserve"><value>Financials</value></data>
+	<data name="SecHealth" xml:space="preserve"><value>Healthcare</value></data>
+	<data name="SecStaples" xml:space="preserve"><value>Consumer Staples</value></data>
+	<data name="SecDiscretionary" xml:space="preserve"><value>Consumer Discretionary</value></data>
+	<data name="SecEnergy" xml:space="preserve"><value>Energy</value></data>
+	<data name="SecUtilities" xml:space="preserve"><value>Utilities</value></data>
+	<data name="SecRealEstate" xml:space="preserve"><value>Real Estate</value></data>
+	<data name="SecIndustrials" xml:space="preserve"><value>Industrials</value></data>
+	<data name="SecMaterials" xml:space="preserve"><value>Materials</value></data>
+	<data name="CancelHint" xml:space="preserve"><value>Press Enter to cancel</value></data>
+	<data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
+	<data name="CompoundCalc" xml:space="preserve"><value>Compound Interest Calculator</value></data>
+	<data name="CalcInitial" xml:space="preserve"><value>Initial Investment</value></data>
+	<data name="CalcMonthly" xml:space="preserve"><value>Monthly Contribution</value></data>
+	<data name="CalcRate" xml:space="preserve"><value>Estimated Annual Yield (%)</value></data>
+	<data name="CalcYears" xml:space="preserve"><value>Investment Period (Years)</value></data>
+	<data name="GoalMenuHeader" xml:space="preserve"><value>  🎯 FINANCIAL GOAL MANAGER</value></data>
+	<data name="GoalMenuOpt1" xml:space="preserve"><value>1. Calculate and save a new goal</value></data>
+	<data name="GoalMenuOpt2" xml:space="preserve"><value>2. View my saved goals</value></data>
+	<data name="GoalMenuOpt3" xml:space="preserve"><value>3. Delete a financial goal</value></data>
+	<data name="GoalMenuOpt4" xml:space="preserve"><value>4. Back to Main Menu</value></data>
+	<data name="GoalHowItWorks" xml:space="preserve"><value>              HOW THE GOAL PLANNING WORKS                  </value></data>
+	<data name="GoalStep1Title" xml:space="preserve"><value>📌 Step 1. Find the 'real' cost through the years (with inflation)</value></data>
+	<data name="GoalStep1Desc" xml:space="preserve"><value>We use a standard 2.14% annual inflation rate for the USD.</value></data>
+	<data name="GoalStep2Title" xml:space="preserve"><value>📌 Step 2. Calculate your monthly investment target</value></data>
+	<data name="GoalStep2Desc" xml:space="preserve"><value>We divide the future cost by the compound interest factor.</value></data>
+	<data name="GoalPressAnyCalc" xml:space="preserve"><value>Press any key to start calculating your own goal...</value></data>
+	<data name="GoalNewPlanHeader" xml:space="preserve"><value>                      NEW GOAL PLAN                        </value></data>
+	<data name="GoalNamePrompt" xml:space="preserve"><value> Name your goal (e.g. Apartment)</value></data>
+	<data name="GoalPricePrompt" xml:space="preserve"><value>1. Current cost of your goal ($)</value></data>
+	<data name="GoalYearsPrompt" xml:space="preserve"><value>2. Target horizon (years)</value></data>
+	<data name="GoalRatePrompt" xml:space="preserve"><value>3. Expected annual return (%)</value></data>
+	<data name="GoalCalcHeader" xml:space="preserve"><value>                    PLAN CALCULATIONS                      </value></data>
+	<data name="GoalTarget" xml:space="preserve"><value>🎯 Goal:</value></data>
+	<data name="GoalCostToday" xml:space="preserve"><value>• Cost today:</value></data>
+	<data name="GoalCostFuture" xml:space="preserve"><value>• Cost in {0} years (2.14% inflation):</value></data>
+	<data name="GoalReqInv" xml:space="preserve"><value>➜ REQUIRED MONTHLY INVESTMENT:</value></data>
+	<data name="GoalSavePrompt" xml:space="preserve"><value>&#xA;💾 Do you want to save this goal to your profile? (YES/NO): </value></data>
+	<data name="GoalSavedSuccess" xml:space="preserve"><value>&#xA;✔ Goal saved successfully!</value></data>
+	<data name="GoalSavedCancel" xml:space="preserve"><value>&#xA;Calculation finished without saving.</value></data>
+	<data name="GoalListHeader" xml:space="preserve"><value>                                        MY SAVED FINANCIAL GOALS                                    </value></data>
+	<data name="GoalListEmpty" xml:space="preserve"><value>You have no saved goals yet. Calculate one in option 1!</value></data>
+	<data name="TblGoalName" xml:space="preserve"><value>Goal Name</value></data>
+	<data name="TblPriceToday" xml:space="preserve"><value>Price Today</value></data>
+	<data name="TblYears" xml:space="preserve"><value>Years</value></data>
+	<data name="TblReturn" xml:space="preserve"><value>Return</value></data>
+	<data name="TblFuturePrice" xml:space="preserve"><value>Future Price</value></data>
+	<data name="TblMonthlyInv" xml:space="preserve"><value>Monthly Inv</value></data>
+	<data name="GoalDelEmpty" xml:space="preserve"><value>&#xA;You have no saved goals to delete.</value></data>
+	<data name="GoalYearsWord" xml:space="preserve"><value>years</value></data>
+	<data name="GoalDelCancel" xml:space="preserve"><value>[ Cancel Action ]</value></data>
+	<data name="GoalDelPrompt" xml:space="preserve"><value>Select a financial goal to delete:</value></data>
+	<data name="GoalDelSuccess" xml:space="preserve"><value>&#xA;✔ Goal "{0}" has been successfully removed!</value></data>
+	<data name="EnterTicker" xml:space="preserve"><value>Enter stock ticker</value></data>
+	
+</root>
