@@ -9,21 +9,20 @@ namespace Smart_Dividend_Portfolio_Tracker.Services
     public class PortfolioManager
     {
         // 1. Метод отримання всіх акцій (читає прямо з SQL Server)
-        public List<DividendStock> GetAllStocks()
+        public List<DividendStock> GetAllStocks(int userId)
         {
             using (var db = new AppDbContext())
             {
-                return db.Stocks.ToList();
+                return db.Stocks.Where(s => s.UserProfileId == userId).ToList();
             }
         }
 
-        // 2. Метод додавання (або оновлення) акції
-        public void AddStock(DividendStock stock)
+        public void AddStock(DividendStock stock, int userId)
         {
             using (var db = new AppDbContext())
             {
-                // Шукаємо, чи є вже така акція в базі (порівнюємо тікери)
-                var existing = db.Stocks.FirstOrDefault(s => s.Ticker.ToLower() == stock.Ticker.ToLower());
+                stock.UserProfileId = userId; // Прив'язуємо акцію до користувача
+                var existing = db.Stocks.FirstOrDefault(s => s.Ticker.ToLower() == stock.Ticker.ToLower() && s.UserProfileId == userId);
 
                 if (existing != null)
                 {
@@ -60,34 +59,38 @@ namespace Smart_Dividend_Portfolio_Tracker.Services
         }
 
         // 4. Метод повного очищення портфеля (видаляє всі рядки з таблиці Stocks)
-        public void ClearAll()
+        public void ClearAll(int userId)
         {
             using (var db = new AppDbContext())
             {
-                db.Stocks.RemoveRange(db.Stocks);
+                // Видаляємо акції тільки конкретного профілю, а не всю таблицю!
+                var userStocks = db.Stocks.Where(s => s.UserProfileId == userId);
+                db.Stocks.RemoveRange(userStocks);
                 db.SaveChanges();
             }
         }
 
         // 5. Отримання загальної вартості (рахуємо з бази)
-        public decimal GetTotalPortfolioValue()
+        public decimal GetTotalPortfolioValue(int userId)
         {
             using (var db = new AppDbContext())
             {
-                decimal total = 0;
-                foreach (var stock in db.Stocks) total += stock.TotalValue;
-                return total;
+                return db.Stocks
+                         .Where(s => s.UserProfileId == userId)
+                         .AsEnumerable()
+                         .Sum(s => s.TotalValue);
             }
         }
 
         // 6. Отримання річного доходу (рахуємо з бази)
-        public decimal GetTotalAnnualIncome()
+        public decimal GetTotalAnnualIncome(int userId)
         {
             using (var db = new AppDbContext())
             {
-                decimal total = 0;
-                foreach (var stock in db.Stocks) total += stock.CalculateAnnualDividend();
-                return total;
+                return db.Stocks
+                         .Where(s => s.UserProfileId == userId)
+                         .AsEnumerable()
+                         .Sum(s => s.CalculateAnnualDividend());
             }
         }
 

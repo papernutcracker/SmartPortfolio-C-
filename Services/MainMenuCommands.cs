@@ -7,10 +7,19 @@ namespace SmartDividendTracker.Services
     public class ViewPortfolioCommand : IMenuCommand
     {
         private readonly PortfolioManager _portfolioManager;
-        public ViewPortfolioCommand(PortfolioManager portfolioManager) => _portfolioManager = portfolioManager;
+        private readonly UserProfile _profile; // Додали поле
+
+        // Оновили конструктор
+        public ViewPortfolioCommand(PortfolioManager portfolioManager, UserProfile profile)
+        {
+            _portfolioManager = portfolioManager;
+            _profile = profile;
+        }
 
         public string DisplayName => LocalizationManager.Get("MenuOpt1");
-        public void Execute() => Program.ShowPortfolioMenu(_portfolioManager);
+
+        // Передаємо _profile у метод
+        public void Execute() => Program.ShowPortfolioMenu(_portfolioManager, _profile);
     }
 
     public class CheatSheetCommand : IMenuCommand

@@ -41,7 +41,7 @@ namespace SmartDividendTracker
 
                 var commands = new List<IMenuCommand>
                 {
-                    new ViewPortfolioCommand(portfolioManager),
+                    new ViewPortfolioCommand(portfolioManager, profile),
                     new CheatSheetCommand(),
                     new TutorialMenuCommand(profile),
                     new CompoundCalculatorCommand(),
@@ -97,14 +97,17 @@ namespace SmartDividendTracker
             }
         }
 
-        public static void ShowPortfolioMenu(PortfolioManager portfolioManager)
-        {
-            int lastChoice = 0;
+        // Додали UserProfile profile
+public static void ShowPortfolioMenu(PortfolioManager portfolioManager, UserProfile profile)
+{
+    int lastChoice = 0;
 
-            while (true)
-            {
-                bool isUa = LocalizationManager.GetCurrentLanguage() == "uk";
-                decimal totalValue = portfolioManager.GetTotalPortfolioValue();
+    while (true)
+    {
+        bool isUa = LocalizationManager.GetCurrentLanguage() == "uk";
+        // Додали profile.Id
+        decimal totalValue = portfolioManager.GetTotalPortfolioValue(profile.Id); 
+        // ...
                 string header = $"--- {LocalizationManager.Get("PortfolioMenu")} ---\n" +
                                 $"[{LocalizationManager.Get("TotalValue")}: ${totalValue:F2}]";
 
@@ -130,7 +133,7 @@ namespace SmartDividendTracker
                     Console.WriteLine("=========================================================================================\n");
                     Console.ResetColor();
 
-                    var stocks = portfolioManager.GetAllStocks();
+                    var stocks = portfolioManager.GetAllStocks(profile.Id);
 
                     if (stocks.Count == 0)
                     {
@@ -169,7 +172,7 @@ namespace SmartDividendTracker
                         }
                         Console.WriteLine(new string('-', 89));
 
-                        decimal totalIncome = portfolioManager.GetTotalAnnualIncome();
+                        decimal totalIncome = portfolioManager.GetTotalAnnualIncome(profile.Id);
                         decimal avgYield = totalValue > 0 ? (totalIncome / totalValue) * 100m : 0m;
 
                         Console.ForegroundColor = ConsoleColor.Green;
@@ -217,15 +220,24 @@ namespace SmartDividendTracker
                     int sectorChoice = ConsoleHelper.SelectOption(LocalizationManager.Get("SelectSector"), localizedSectors);
                     string sector = systemSectors[sectorChoice];
 
-                    // 3. Ввід числових даних (вимагають обов'язкового вводу)
-                    decimal price = ReadDecimalInput(LocalizationManager.Get("EnterPrice"));
-                    int shares = ReadIntInput(LocalizationManager.Get("EnterShares"));
-                    decimal divYield = ReadDecimalInput(LocalizationManager.Get("EnterYield"));
-                    decimal peRatio = ReadDecimalInput(LocalizationManager.Get("EnterPE"));
+                    // 3. Ввід числових даних зі знаком питання (nullable) і перевіркою на null
+                    decimal? price = ReadDecimalInput(LocalizationManager.Get("EnterPrice"));
+                    if (price == null) continue;
 
-                    // Якщо все введено успішно, додаємо акцію
-                    var newStock = new DividendStock(ticker, sector, price, shares, divYield, peRatio);
-                    portfolioManager.AddStock(newStock);
+                    int? shares = ReadIntInput(LocalizationManager.Get("EnterShares"));
+                    if (shares == null) continue;
+
+                    decimal? divYield = ReadDecimalInput(LocalizationManager.Get("EnterYield"));
+                    if (divYield == null) continue;
+
+                    decimal? peRatio = ReadDecimalInput(LocalizationManager.Get("EnterPE"));
+                    if (peRatio == null) continue;
+
+                    // Додаємо .Value, оскільки ми вже впевнилися вище, що вони не null
+                    var newStock = new DividendStock(ticker, sector, price.Value, shares.Value, divYield.Value, peRatio.Value);
+
+                    // Передаємо profile.Id для запису в БД
+                    portfolioManager.AddStock(newStock, profile.Id);
 
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine($"\n{LocalizationManager.Get("StockAdded")}");
@@ -236,7 +248,7 @@ namespace SmartDividendTracker
                 }
                 else if (choice == 2) // Remove Stock
                 {
-                    var stocks = portfolioManager.GetAllStocks();
+                    var stocks = portfolioManager.GetAllStocks(profile.Id);
 
                     if (stocks.Count == 0)
                     {
@@ -299,7 +311,7 @@ namespace SmartDividendTracker
 
                     if (confirmation == "YES" || confirmation == "ТАК")
                     {
-                        portfolioManager.ClearAll();
+                        portfolioManager.ClearAll(profile.Id);
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine($"\n{LocalizationManager.Get("PortfolioCleared")}");
                         Console.ResetColor();
@@ -322,14 +334,18 @@ namespace SmartDividendTracker
             }
         }
 
-        private static decimal ReadDecimalInput(string prompt)
+        private static decimal? ReadDecimalInput(string prompt)
         {
             while (true)
             {
-                Console.Write($"{prompt}: ");
+                // Додаємо підказку про скасування
+                Console.Write($"{prompt} ({LocalizationManager.Get("CancelHint")}): ");
                 string input = Console.ReadLine()?.Trim().Replace(",", ".") ?? "";
 
-                if (!string.IsNullOrEmpty(input) && decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal value) && value >= 0)
+                // Якщо користувач просто натиснув Enter (пустий рядок) - повертаємо null
+                if (string.IsNullOrEmpty(input)) return null;
+
+                if (decimal.TryParse(input, NumberStyles.Any, CultureInfo.InvariantCulture, out decimal value) && value >= 0)
                 {
                     return value;
                 }
@@ -340,18 +356,29 @@ namespace SmartDividendTracker
             }
         }
 
-        private static int ReadIntInput(string prompt)
+        private static int? ReadIntInput(string prompt)
         {
             while (true)
             {
-                Console.Write($"{prompt}: ");
+                // Виводимо текст запиту + підказку про скасування (напр. "Press Enter to cancel")
+                Console.Write($"{prompt} ({LocalizationManager.Get("CancelHint")}): ");
+
+                // Зчитуємо ввід і прибираємо зайві пробіли по краях
                 string input = Console.ReadLine()?.Trim() ?? "";
 
-                if (!string.IsNullOrEmpty(input) && int.TryParse(input, out int value) && value > 0)
+                // Якщо користувач нічого не ввів і просто натиснув Enter — це скасування дії
+                if (string.IsNullOrEmpty(input))
+                {
+                    return null;
+                }
+
+                // Перевіряємо, чи це коректне ціле число і чи воно більше нуля (наприклад, не можна купити 0 або -5 акцій)
+                if (int.TryParse(input, out int value) && value > 0)
                 {
                     return value;
                 }
 
+                // Якщо ввід некоректний (літери, символи або від'ємне число), виводимо помилку
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(LocalizationManager.Get("InvalidInput"));
                 Console.ResetColor();

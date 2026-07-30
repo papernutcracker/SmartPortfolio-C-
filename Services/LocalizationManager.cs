@@ -199,7 +199,12 @@ namespace SmartDividendTracker.Services
         {
             _currentLanguage = lang.ToLower() == "uk" ? "uk" : "en";
 
-            var culture = new CultureInfo(_currentLanguage);
+            var culture = (CultureInfo)new CultureInfo(_currentLanguage).Clone();
+
+            // Примусово ставимо крапку як роздільник для звичайних чисел і валют
+            culture.NumberFormat.NumberDecimalSeparator = ".";
+            culture.NumberFormat.CurrencyDecimalSeparator = ".";
+
             Thread.CurrentThread.CurrentCulture = culture;
             Thread.CurrentThread.CurrentUICulture = culture;
         }
