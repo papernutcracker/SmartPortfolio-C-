@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="../SmartDividendTracker.WPF/SmartDividendTracker.WPF.csproj" Id="52376d30-4715-4315-8f43-64bcf6637111" />
   <Project Path="Smart Dividend Portfolio Tracker.csproj" />
 </Solution>
