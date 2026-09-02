@@ -8,6 +8,7 @@ namespace SmartDividendTracker.Data
         public DbSet<UserProfile> Users { get; set; }
         public DbSet<DividendStock> Stocks { get; set; }
         public DbSet<CustomGoal> Goals { get; set; }
+        public object DividendStocks { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
