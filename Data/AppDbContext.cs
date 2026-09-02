@@ -10,6 +10,8 @@ namespace SmartDividendTracker.Data
         public DbSet<CustomGoal> Goals { get; set; }
         public object DividendStocks { get; set; }
 
+        public DbSet<CustomGoal> CustomGoals { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=diana\\SQLEXPRESS;Database=SmartDividendTrackerDB;Trusted_Connection=True;TrustServerCertificate=True;");
