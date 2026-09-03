@@ -7,10 +7,10 @@ namespace SmartDividendTracker.Data
     {
         public DbSet<UserProfile> Users { get; set; }
         public DbSet<DividendStock> Stocks { get; set; }
-        public DbSet<CustomGoal> Goals { get; set; }
-        public object DividendStocks { get; set; }
-
         public DbSet<CustomGoal> CustomGoals { get; set; }
+
+        // Повертаємо назад для сумісності з OnboardingService
+        public DbSet<CustomGoal> Goals { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
