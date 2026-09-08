@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using SmartDividendTracker.Models;
 
 namespace SmartDividendTracker.Data
@@ -14,7 +15,19 @@ namespace SmartDividendTracker.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=diana\\SQLEXPRESS;Database=SmartDividendTrackerDB;Trusted_Connection=True;TrustServerCertificate=True;");
+            if (!optionsBuilder.IsConfigured)
+            {
+                // Динамічно зчитуємо рядок підключення з appsettings.json
+                var configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                    .Build();
+
+                var connectionString = configuration.GetConnectionString("DefaultConnection")
+                                       ?? "Server=diana\\SQLEXPRESS;Database=SmartDividendTrackerDB;Trusted_Connection=True;TrustServerCertificate=True;";
+
+                optionsBuilder.UseSqlServer(connectionString);
+            }
         }
     }
 }

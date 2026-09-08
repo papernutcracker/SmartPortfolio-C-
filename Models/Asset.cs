@@ -5,11 +5,11 @@
         public string Ticker { get; set; }
         public string Sector { get; set; }
         public decimal AveragePrice { get; set; }
-        public int Shares { get; set; }
+        public decimal Shares { get; set; }
 
         public decimal TotalValue => AveragePrice * Shares;
 
-        protected Asset(string ticker, string sector, decimal averagePrice, int shares)
+        protected Asset(string ticker, string sector, decimal averagePrice, decimal shares)
         {
             Ticker = ticker.ToUpper();
             Sector = sector;

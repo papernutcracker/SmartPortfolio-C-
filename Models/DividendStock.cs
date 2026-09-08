@@ -10,7 +10,7 @@
     
 
 
-public DividendStock(string ticker, string sector, decimal averagePrice, int shares, decimal dividendYield, decimal peRatio)
+public DividendStock(string ticker, string sector, decimal averagePrice, decimal shares, decimal dividendYield, decimal peRatio)
             : base(ticker, sector, averagePrice, shares)
         {
             DividendYield = dividendYield;

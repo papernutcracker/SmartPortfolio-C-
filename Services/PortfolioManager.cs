@@ -27,7 +27,7 @@ namespace Smart_Dividend_Portfolio_Tracker.Services
                 if (existing != null)
                 {
                     // Якщо є — оновлюємо її середню ціну та кількість
-                    int totalShares = existing.Shares + stock.Shares;
+                    decimal totalShares = existing.Shares + stock.Shares;
                     existing.AveragePrice = ((existing.AveragePrice * existing.Shares) + (stock.AveragePrice * stock.Shares)) / totalShares;
                     existing.Shares = totalShares;
                     existing.DividendYield = stock.DividendYield;

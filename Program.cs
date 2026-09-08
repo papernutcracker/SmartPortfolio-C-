@@ -118,6 +118,7 @@ public static void ShowPortfolioMenu(PortfolioManager portfolioManager, UserProf
                     LocalizationManager.Get("RemoveStock"),
                     LocalizationManager.Get("ViewSectorChart"),
                     LocalizationManager.Get("ClearPortfolio"),
+                    "🤖 AI Portfolio Advisor",
                     LocalizationManager.Get("Back")
                 };
 
@@ -327,7 +328,32 @@ public static void ShowPortfolioMenu(PortfolioManager portfolioManager, UserProf
                     Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
                     Console.ReadKey(true);
                 }
-                else if (choice == 5) // Back
+                else if (choice == 5) // AI Advisor
+                {
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.WriteLine("=========================================================================================");
+                    Console.WriteLine("  🤖 AI PORTFOLIO ADVISOR (Llama 3)");
+                    Console.WriteLine("=========================================================================================\n");
+                    Console.ResetColor();
+
+                    Console.WriteLine("Аналізуємо твій портфель за допомогою локального штучного інтелекту, зачекай кілька секунд...\n");
+
+                    // Створюємо сервіс та передаємо контекст бази даних та профіль користувача
+                    var aiAdvisor = new SmartDividendTracker.Services.AiAdvisorService(new SmartDividendTracker.Data.AppDbContext());
+
+                    // Отримуємо пораду (метод асинхронний, тому використовуємо .GetAwaiter().GetResult() у синхронному консольному методі)
+                    string advice = aiAdvisor.GetPortfolioAdviceAsync(profile).GetAwaiter().GetResult();
+
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine(advice);
+                    Console.ResetColor();
+
+                    Console.WriteLine($"\n{LocalizationManager.Get("PressEnter")}");
+                    Console.ReadKey(true);
+                }
+
+                else if (choice == 6) // Back
                 {
                     break;
                 }
