@@ -7,10 +7,12 @@
         public decimal DividendYield { get; set; }
         public decimal PeRatio { get; set; }
 
-    
+        public string Currency { get; set; } = "USD";
 
 
-public DividendStock(string ticker, string sector, decimal averagePrice, decimal shares, decimal dividendYield, decimal peRatio)
+
+
+        public DividendStock(string ticker, string sector, decimal averagePrice, decimal shares, decimal dividendYield, decimal peRatio)
             : base(ticker, sector, averagePrice, shares)
         {
             DividendYield = dividendYield;
