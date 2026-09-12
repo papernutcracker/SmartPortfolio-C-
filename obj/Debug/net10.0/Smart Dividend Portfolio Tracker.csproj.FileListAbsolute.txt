@@ -165,4 +165,3 @@ C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\bin\Debug\net10.0\Mi
 C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\bin\Debug\net10.0\Microsoft.Extensions.FileProviders.Abstractions.dll
 C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\bin\Debug\net10.0\Microsoft.Extensions.FileProviders.Physical.dll
 C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\bin\Debug\net10.0\Microsoft.Extensions.FileSystemGlobbing.dll
-C:\Projects\SmartPortfolio\Smart Dividend Portfolio Tracker\obj\Debug\net10.0\uk\Smart Dividend Portfolio Tracker.resources.cs

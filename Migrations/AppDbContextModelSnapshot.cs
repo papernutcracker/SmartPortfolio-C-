@@ -17,142 +17,151 @@ namespace Smart_Dividend_Portfolio_Tracker.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.10")
+                .HasAnnotation("ProductVersion", "10.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("SmartDividendTracker.Models.CustomGoal", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("AnnualReturn")
-                        .HasColumnType("decimal(18,2)");
+                b.Property<decimal>("AnnualReturn")
+                    .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("CurrentPrice")
-                        .HasColumnType("decimal(18,2)");
+                b.Property<decimal>("CurrentPrice")
+                    .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("DateUpdated")
+                    .HasColumnType("datetime2");
 
-                    b.Property<double>("FuturePrice")
-                        .HasColumnType("float");
+                b.Property<double>("FuturePrice")
+                    .HasColumnType("float");
 
-                    b.Property<double>("MonthlyContribution")
-                        .HasColumnType("float");
+                b.Property<double>("MonthlyContribution")
+                    .HasColumnType("float");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("UserProfileId")
-                        .HasColumnType("int");
+                b.Property<int?>("UserProfileId")
+                    .HasColumnType("int");
 
-                    b.Property<int>("Years")
-                        .HasColumnType("int");
+                b.Property<int>("Years")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("UserProfileId");
+                b.HasIndex("UserProfileId");
 
-                    b.ToTable("CustomGoal");
-                });
+                b.ToTable("CustomGoal", (string)null);
+            });
 
             modelBuilder.Entity("SmartDividendTracker.Models.DividendStock", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("AveragePrice")
-                        .HasColumnType("decimal(18,2)");
+                b.Property<decimal>("AveragePrice")
+                    .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Currency")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Currency")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("DividendYield")
-                        .HasColumnType("decimal(18,2)");
+                b.Property<decimal>("DividendYield")
+                    .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("PeRatio")
-                        .HasColumnType("decimal(18,2)");
+                b.Property<decimal>("PeRatio")
+                    .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Sector")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Sector")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("Shares")
-                        .HasColumnType("decimal(18,2)");
+                b.Property<decimal>("Shares")
+                    .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("Ticker")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Ticker")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserProfileId")
-                        .HasColumnType("int");
+                b.Property<int>("UserProfileId")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Stocks");
-                });
+                b.ToTable("Stocks", (string)null);
+            });
 
             modelBuilder.Entity("SmartDividendTracker.Models.UserProfile", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Currency")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ApiKey")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("ExchangeRate")
-                        .HasColumnType("decimal(18,2)");
+                b.Property<string>("Currency")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Experience")
-                        .HasColumnType("int");
+                b.Property<decimal>("EurExchangeRate")
+                    .HasColumnType("decimal(18,2)");
 
-                    b.PrimitiveCollection<string>("Goals")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                b.Property<decimal>("ExchangeRate")
+                    .HasColumnType("decimal(18,2)");
 
-                    b.Property<bool>("HasCompletedTutorial")
-                        .HasColumnType("bit");
+                b.Property<int>("Experience")
+                    .HasColumnType("int");
 
-                    b.Property<bool>("HasExistingPortfolio")
-                        .HasColumnType("bit");
+                b.PrimitiveCollection<string>("Goals")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Horizon")
-                        .HasColumnType("int");
+                b.Property<bool>("HasCompletedTutorial")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("Language")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                b.Property<bool>("HasExistingPortfolio")
+                    .HasColumnType("bit");
 
-                    b.HasKey("Id");
+                b.Property<int>("Horizon")
+                    .HasColumnType("int");
 
-                    b.ToTable("Users");
-                });
+                b.Property<string>("Language")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<decimal>("UsdExchangeRate")
+                    .HasColumnType("decimal(18,2)");
+
+                b.HasKey("Id");
+
+                b.ToTable("Users", (string)null);
+            });
 
             modelBuilder.Entity("SmartDividendTracker.Models.CustomGoal", b =>
-                {
-                    b.HasOne("SmartDividendTracker.Models.UserProfile", null)
-                        .WithMany("SavedCustomGoals")
-                        .HasForeignKey("UserProfileId");
-                });
+            {
+                b.HasOne("SmartDividendTracker.Models.UserProfile", null)
+                    .WithMany("SavedCustomGoals")
+                    .HasForeignKey("UserProfileId");
+            });
 
             modelBuilder.Entity("SmartDividendTracker.Models.UserProfile", b =>
-                {
-                    b.Navigation("SavedCustomGoals");
-                });
+            {
+                b.Navigation("SavedCustomGoals");
+            });
 #pragma warning restore 612, 618
         }
     }
