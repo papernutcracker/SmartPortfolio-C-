@@ -12,8 +12,8 @@ using SmartDividendTracker.Data;
 namespace Smart_Dividend_Portfolio_Tracker.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260902142236_AddGoalDate")]
-    partial class AddGoalDate
+    [Migration("20260913232603_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,55 @@ namespace Smart_Dividend_Portfolio_Tracker.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("SmartDividendTracker.Models.ChatMessageEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ChatSessionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Sender")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatSessionId");
+
+                    b.ToTable("ChatMessages");
+                });
+
+            modelBuilder.Entity("SmartDividendTracker.Models.ChatSession", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ChatSessions");
+                });
 
             modelBuilder.Entity("SmartDividendTracker.Models.CustomGoal", b =>
                 {
@@ -76,6 +125,10 @@ namespace Smart_Dividend_Portfolio_Tracker.Migrations
                     b.Property<decimal>("AveragePrice")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("DividendYield")
                         .HasColumnType("decimal(18,2)");
 
@@ -86,8 +139,8 @@ namespace Smart_Dividend_Portfolio_Tracker.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Shares")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Shares")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Ticker")
                         .IsRequired()
@@ -109,6 +162,15 @@ namespace Smart_Dividend_Portfolio_Tracker.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ApiKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Currency")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("EurExchangeRate")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("Experience")
                         .HasColumnType("int");
 
@@ -129,9 +191,23 @@ namespace Smart_Dividend_Portfolio_Tracker.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal?>("UsdExchangeRate")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("SmartDividendTracker.Models.ChatMessageEntity", b =>
+                {
+                    b.HasOne("SmartDividendTracker.Models.ChatSession", "ChatSession")
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ChatSession");
                 });
 
             modelBuilder.Entity("SmartDividendTracker.Models.CustomGoal", b =>
@@ -139,6 +215,11 @@ namespace Smart_Dividend_Portfolio_Tracker.Migrations
                     b.HasOne("SmartDividendTracker.Models.UserProfile", null)
                         .WithMany("SavedCustomGoals")
                         .HasForeignKey("UserProfileId");
+                });
+
+            modelBuilder.Entity("SmartDividendTracker.Models.ChatSession", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("SmartDividendTracker.Models.UserProfile", b =>

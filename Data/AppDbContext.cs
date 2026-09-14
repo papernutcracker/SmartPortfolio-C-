@@ -10,6 +10,9 @@ namespace SmartDividendTracker.Data
         public DbSet<DividendStock> Stocks { get; set; }
         public DbSet<CustomGoal> CustomGoals { get; set; }
 
+        public DbSet<ChatSession> ChatSessions { get; set; }
+        public DbSet<ChatMessageEntity> ChatMessages { get; set; }
+
         // Повертаємо назад для сумісності з OnboardingService
         public DbSet<CustomGoal> Goals { get; set; }
 

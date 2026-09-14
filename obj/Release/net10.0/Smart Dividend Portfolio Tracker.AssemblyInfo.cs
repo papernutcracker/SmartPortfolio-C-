@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Smart Dividend Portfolio Tracker")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+56adb9e0a7be8d9484d9fb75fa046e4a0a63aff6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7319d63a97f3839aa2d93659b47a231c02b9c1bb")]
 [assembly: System.Reflection.AssemblyProductAttribute("Smart Dividend Portfolio Tracker")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Smart Dividend Portfolio Tracker")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
