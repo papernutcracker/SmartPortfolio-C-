@@ -1,1 +1,12 @@
+
+[Oo]bj/
+[Bb]in/
 .vs/
+*.user
+*.suo
+
+# Local Databases (файли баз даних, де лежать твої токени та дані)
+*.mdf
+*.ldf
+*.db
+*.sqlite

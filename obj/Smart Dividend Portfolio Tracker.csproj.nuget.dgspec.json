@@ -65,6 +65,10 @@
             "Microsoft.Extensions.Configuration.Json": {
               "target": "Package",
               "version": "[10.0.12, )"
+            },
+            "PdfPig": {
+              "target": "Package",
+              "version": "[0.1.16, )"
             }
           },
           "imports": [
